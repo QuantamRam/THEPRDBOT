@@ -420,8 +420,43 @@ body {
   gap: 12px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 56px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
+}
+
+/* Hero Central Animation */
+.hero-animation-wrapper {
+  width: 100%;
+  max-width: 660px;
+  margin: 0 auto 36px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero-animation-video {
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  /* Seamless background blending on warm cream canvas */
+  mix-blend-mode: multiply;
+  filter: contrast(1.15) brightness(1.12);
+  /* Feathered radial mask to eliminate any harsh edge transitions */
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 68%, rgba(0, 0, 0, 0) 98%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 68%, rgba(0, 0, 0, 0) 98%);
+  border-radius: var(--radius-lg);
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="dark"] .hero-animation-video {
+  /* Invert and screen blend for dark mode */
+  filter: invert(1) contrast(1.15) brightness(1.12) hue-rotate(180deg);
+  mix-blend-mode: screen;
 }
 
 .hero-pill-cta {

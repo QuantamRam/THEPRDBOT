@@ -73,3 +73,4 @@ Visit `http://localhost:5173` in your browser.
 ## 📄 License
 
 MIT License. Crafted for Product Managers across the nation.
+

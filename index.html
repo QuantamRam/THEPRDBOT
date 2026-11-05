@@ -36,9 +36,9 @@
         <span id="aiEngineLabel">Engine: Built-in</span>
       </button>
 
-      <label for="templateSelect" style="font-size:12px; font-weight:600; color:var(--color-body); white-space:nowrap;">Project Archetype:</label>
+      <label for="templateSelect" style="font-size:12px; font-weight:600; color:var(--color-body); white-space:nowrap;">Archetype:</label>
       <select id="templateSelect" class="template-select">
-        <option value="custom">✨ Custom Blank Project (Draft Any PRD)</option>
+        <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
         <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
         <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
         <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
@@ -76,6 +76,17 @@
         <div class="form-group">
           <label class="form-label" for="featureName">Feature Name / Strategic Initiative</label>
           <input type="text" id="featureName" class="form-input" placeholder="e.g. Real-Time Fraud Shield, 1-Click Express Checkout..." />
+          
+          <!-- Quick Inspiration Pills -->
+          <div class="quick-archetype-pills">
+            <span style="font-size:11px; font-weight:600; color:var(--color-muted); align-self:center;">Quick Load:</span>
+            <button type="button" class="quick-idea-pill" data-tpl="fintech_fraud">💳 Fraud Shield</button>
+            <button type="button" class="quick-idea-pill" data-tpl="health_scribe">🏥 Clinical Scribe</button>
+            <button type="button" class="quick-idea-pill" data-tpl="ecommerce_checkout">🛒 1-Click Checkout</button>
+            <button type="button" class="quick-idea-pill" data-tpl="devtools_apm">🛠️ Tracing APM</button>
+            <button type="button" class="quick-idea-pill" data-tpl="agent_copilot">🤖 AI Agent</button>
+            <button type="button" class="quick-idea-pill" data-tpl="b2b_saas_rbac">🏢 B2B RBAC</button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -140,7 +151,7 @@
       </div>
     </aside>
 
-    <!-- Right Panel: Output Tabs (PRD, CPO Audit, Wireframes, Telemetry) -->
+    <!-- Right Panel: Output Tabs (PRD, CPO Audit, Wireframes, Telemetry, Playground) -->
     <section class="right-panel">
       <nav class="preview-nav">
         <div class="preview-tabs">
@@ -148,9 +159,12 @@
           <button class="preview-tab" data-tab="audit">🛡️ CPO Strategic Audit</button>
           <button class="preview-tab" data-tab="wireframe">🎨 Visual Prototype & Specs</button>
           <button class="preview-tab" data-tab="telemetry">📊 Grounding Telemetry & SQL</button>
+          <button class="preview-tab" data-tab="playground">⚡ AI Playground</button>
         </div>
 
         <div class="preview-actions">
+          <button id="syncNotionBtn" class="btn btn-secondary btn-sm" title="1-Click Copy Notion-Optimized Blocks">📑 Notion Sync</button>
+          <button id="syncJiraBtn" class="btn btn-secondary btn-sm" title="1-Click Export Atlassian Jira Markup">🔷 Jira Sync</button>
           <button id="editToggleBtn" class="btn btn-outline btn-sm">Edit Raw MD</button>
           <button id="copyPrdBtn" class="btn btn-secondary btn-sm">Copy MD</button>
           <button id="downloadPrdBtn" class="btn btn-primary btn-sm">Download .md</button>
@@ -158,7 +172,7 @@
       </nav>
 
       <!-- Quick Jump Bar for 12-Phase PRD -->
-      <div id="prdQuickJumpBar" class="prd-quick-jump-bar">
+      <div id="prdQuickJumpBar" class="prd-quick-jump-bar" style="display:none;">
         <span style="font-size:11px; font-weight:700; color:var(--color-muted); text-transform:uppercase; margin-right:4px;">Quick Jump:</span>
         <button class="jump-pill" data-target="phase-1">1. Exec Summary</button>
         <button class="jump-pill" data-target="phase-3">3. Personas</button>
@@ -172,7 +186,36 @@
 
       <!-- View: 12-Phase PRD -->
       <div id="viewPRD" class="preview-content">
-        <div id="prdRenderedView" class="markdown-body"></div>
+        <!-- Elegant Studio Ready Empty State -->
+        <div id="prdEmptyState" class="empty-state-card">
+          <div class="empty-state-icon">🚀</div>
+          <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to THE PRD BOT Studio</h2>
+          <p style="font-size:13.5px; color:var(--color-body); max-width:540px; margin:0 auto 24px; line-height:1.6;">
+            Your clean canvas is ready. Draft an executive-ready, 12-phase PRD backed by real SQL telemetry, Gherkin acceptance criteria, and interactive prototypes.
+          </p>
+
+          <div class="empty-state-grid">
+            <div class="empty-action-box" id="emptyActionDraft">
+              <div style="font-size:24px; margin-bottom:6px;">✍️</div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">1. Start from Your Idea</div>
+              <div style="font-size:12px; color:var(--color-muted);">Fill in your feature idea on the left and click "Draft 12-Phase PRD".</div>
+            </div>
+
+            <div class="empty-action-box" id="emptyActionArchetype">
+              <div style="font-size:24px; margin-bottom:6px;">💡</div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">2. Load an Archetype</div>
+              <div style="font-size:12px; color:var(--color-muted);">Explore pre-built patterns for Fintech, HealthTech, E-Commerce, or AI Agents.</div>
+            </div>
+
+            <div class="empty-action-box" id="emptyActionPlayground">
+              <div style="font-size:24px; margin-bottom:6px;">⚡</div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">3. Open AI Playground</div>
+              <div style="font-size:12px; color:var(--color-muted);">Test frontier models (Gemini, Claude, GPT-4o) with Amazon 6-Pager & Stripe styles.</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="prdRenderedView" class="markdown-body" style="display:none;"></div>
         <textarea id="prdRawEditor" class="form-textarea" style="display:none; width:100%; height:100%; font-family:var(--font-code); font-size:13px; line-height:1.5; padding:16px; border:none; outline:none;" spellcheck="false"></textarea>
       </div>
 
@@ -189,6 +232,80 @@
       <!-- View: Telemetry & SQL -->
       <div id="viewTelemetry" class="preview-content" style="display:none;">
         <div id="telemetryContainer" class="telemetry-dashboard"></div>
+      </div>
+
+      <!-- View: AI Model Playground -->
+      <div id="viewPlayground" class="preview-content" style="display:none;">
+        <div class="playground-container">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+            <div>
+              <div style="font-size:18px; font-weight:700;">⚡ AI Model & Framework Playground</div>
+              <div style="font-size:13px; color:var(--color-body);">Benchmark frontier models and test different PRD styles (Amazon 6-Pager, Stripe Technical, Reforge).</div>
+            </div>
+            <button id="runPlaygroundBtn" class="btn btn-primary btn-sm">🚀 Run Model Test</button>
+          </div>
+
+          <!-- Model & Style Selectors -->
+          <div class="playground-controls-grid">
+            <div class="form-group">
+              <label class="form-label" for="playgroundModelSelect">Frontier Model</label>
+              <select id="playgroundModelSelect" class="form-input">
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Ultra Fast / Recommended)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning / 2M Context)</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Lightweight / Fast)</option>
+                <option value="gpt-4o">OpenAI GPT-4o (Flagship Omni)</option>
+                <option value="gpt-4o-mini">OpenAI GPT-4o Mini (Cost Efficient)</option>
+                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Superior Writing)</option>
+                <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B (Groq / Open Weights)</option>
+                <option value="builtin-local-engine">Built-in Precision Engine (Offline / Instant)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="playgroundStyleSelect">PRD Framework Style</label>
+              <select id="playgroundStyleSelect" class="form-input">
+                <option value="standard">12-Phase Executive PRD (Standard Production)</option>
+                <option value="amazon_6pager">Amazon 6-Pager (Working Backwards + Press Release)</option>
+                <option value="stripe_technical">Stripe Technical Spec (API-First / Idempotency)</option>
+                <option value="reforge_growth">Reforge Growth PRD (Retention Loops & Funnels)</option>
+                <option value="lean_1pager">Lenny's 1-Page Lean PRD (Ship in 2 Weeks)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between;">
+                <label class="form-label" for="playgroundTempSlider">Temperature: <span id="tempVal">0.2</span></label>
+                <span style="font-size:11px; color:var(--color-muted);">Precise & Consistent</span>
+              </div>
+              <input type="range" id="playgroundTempSlider" min="0" max="1" step="0.1" value="0.2" style="width:100%; cursor:pointer;" />
+            </div>
+          </div>
+
+          <!-- Prompt Customizer -->
+          <div class="form-group" style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label class="form-label" style="margin-bottom:0;" for="playgroundCustomPrompt">Custom Playground Prompt (Optional)</label>
+              <button id="loadFeatureContextBtn" class="btn btn-outline btn-sm" style="font-size:11px; padding:2px 8px;">Load Active Feature Context</button>
+            </div>
+            <textarea id="playgroundCustomPrompt" class="form-textarea" style="height:90px;" placeholder="Leave blank to use the active feature context with your chosen PRD style, or write a custom test instruction..."></textarea>
+          </div>
+
+          <!-- Playground Output Metrics Bar -->
+          <div id="playgroundMetricsBar" class="playground-metrics-bar" style="display:none;">
+            <div><strong>Model:</strong> <span id="metricModelName">-</span></div>
+            <div><strong>Style:</strong> <span id="metricStyleName">-</span></div>
+            <div><strong>Latency:</strong> <span id="metricLatency">-</span></div>
+            <div><strong>Est. Tokens:</strong> <span id="metricTokens">-</span></div>
+            <button id="copyPlaygroundBtn" class="btn btn-outline btn-sm" style="margin-left:auto;">Copy Output</button>
+          </div>
+
+          <!-- Playground Result Container -->
+          <div id="playgroundOutput" class="playground-output-box">
+            <div style="color:var(--color-muted); text-align:center; padding:40px 20px;">
+              Select a model and PRD style, then click <strong>"🚀 Run Model Test"</strong> to compare outputs.
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -247,6 +364,37 @@
       </div>
     </div>
   </div>
+
+  <!-- Jira Sync Modal -->
+  <div id="jiraModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card" style="max-width:680px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;">🔷</span>
+          <div>
+            <div style="font-weight:700; font-size:16px;">1-Click Jira Sync & Export</div>
+            <div style="font-size:12px; color:var(--color-muted);">Native Atlassian Jira markup with code blocks, tables, and formatted acceptance criteria</div>
+          </div>
+        </div>
+        <button id="closeJiraModalBtn" class="btn btn-outline btn-sm" style="padding:4px 8px;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <textarea id="jiraMarkupText" class="form-textarea" style="height:260px; font-family:var(--font-code); font-size:12px;" readonly></textarea>
+        <div style="font-size:12px; color:var(--color-muted); line-height:1.4;">
+          Tip: You can paste this directly into Jira issue descriptions or Confluence Wiki markup editor.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="downloadJiraBtn" class="btn btn-outline btn-sm">Download .jira</button>
+        <button id="copyJiraModalBtn" class="btn btn-primary btn-sm">Copy Jira Markup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div id="appToast" class="app-toast"></div>
 
   <!-- Footer -->
   <footer class="app-footer">

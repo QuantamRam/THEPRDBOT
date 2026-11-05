@@ -7,6 +7,8 @@ import { getWireframeSpec } from './engine/wireframeEngine.js';
 import { downloadMarkdown, downloadJson, copyToClipboard, triggerConfetti } from './utils/exportUtils.js';
 import { getAISettings, saveAISettings, testAIConnection, generatePRD } from './engine/aiService.js';
 import { detectDomain } from './engine/domainDetector.js';
+import { convertToJiraMarkup, convertToNotionBlocks } from './utils/jiraNotionExporter.js';
+import { runPlaygroundGeneration } from './engine/playgroundEngine.js';
 
 // Application State
 let currentInputs = {};
@@ -16,6 +18,7 @@ let currentPRDMarkdown = '';
 let currentAudit = null;
 let currentWireframeData = null;
 let isEditRawMode = false;
+let playgroundOutputText = '';
 
 // DOM Elements
 const templateSelect = document.getElementById('templateSelect');
@@ -43,6 +46,15 @@ const baseUrlGroup = document.getElementById('baseUrlGroup');
 const aiBaseUrlInput = document.getElementById('aiBaseUrlInput');
 const testConnectionStatus = document.getElementById('testConnectionStatus');
 
+// Jira Modal Elements
+const jiraModal = document.getElementById('jiraModal');
+const closeJiraModalBtn = document.getElementById('closeJiraModalBtn');
+const jiraMarkupText = document.getElementById('jiraMarkupText');
+const copyJiraModalBtn = document.getElementById('copyJiraModalBtn');
+const downloadJiraBtn = document.getElementById('downloadJiraBtn');
+const syncJiraBtn = document.getElementById('syncJiraBtn');
+const syncNotionBtn = document.getElementById('syncNotionBtn');
+
 // Form Input Elements
 const businessUnitInput = document.getElementById('businessUnit');
 const featureNameInput = document.getElementById('featureName');
@@ -54,8 +66,10 @@ const qaContainer = document.getElementById('qaContainer');
 const generateBtn = document.getElementById('generateBtn');
 const timelineStatusBox = document.getElementById('timelineStatusBox');
 
+const prdEmptyState = document.getElementById('prdEmptyState');
 const prdRenderedView = document.getElementById('prdRenderedView');
 const prdRawEditor = document.getElementById('prdRawEditor');
+const prdQuickJumpBar = document.getElementById('prdQuickJumpBar');
 const editToggleBtn = document.getElementById('editToggleBtn');
 const copyPrdBtn = document.getElementById('copyPrdBtn');
 const downloadPrdBtn = document.getElementById('downloadPrdBtn');
@@ -64,18 +78,51 @@ const auditContainer = document.getElementById('auditContainer');
 const wireframeContainer = document.getElementById('wireframeContainer');
 const telemetryContainer = document.getElementById('telemetryContainer');
 
+// Playground Elements
+const playgroundModelSelect = document.getElementById('playgroundModelSelect');
+const playgroundStyleSelect = document.getElementById('playgroundStyleSelect');
+const playgroundTempSlider = document.getElementById('playgroundTempSlider');
+const tempVal = document.getElementById('tempVal');
+const playgroundCustomPrompt = document.getElementById('playgroundCustomPrompt');
+const loadFeatureContextBtn = document.getElementById('loadFeatureContextBtn');
+const runPlaygroundBtn = document.getElementById('runPlaygroundBtn');
+const playgroundMetricsBar = document.getElementById('playgroundMetricsBar');
+const metricModelName = document.getElementById('metricModelName');
+const metricStyleName = document.getElementById('metricStyleName');
+const metricLatency = document.getElementById('metricLatency');
+const metricTokens = document.getElementById('metricTokens');
+const copyPlaygroundBtn = document.getElementById('copyPlaygroundBtn');
+const playgroundOutput = document.getElementById('playgroundOutput');
+
 // Grounding Status Elements
 const groundingStatusTitle = document.getElementById('groundingStatusTitle');
-const groundingSqlStatus = document.getElementById('groundingSqlStatus');
-const groundingCabStatus = document.getElementById('groundingCabStatus');
-const groundingRegionalStatus = document.getElementById('groundingRegionalStatus');
+const appToast = document.getElementById('appToast');
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updateAIEngineBadge();
-  loadTemplate('fintech_fraud');
+  initCleanWorkspace();
 });
+
+function initCleanWorkspace() {
+  // Clean initial state without auto-generating noisy walls of text
+  templateSelect.value = 'custom';
+  businessUnitInput.value = '';
+  featureNameInput.value = '';
+  epicIdInput.value = '';
+  problemStatementInput.value = '';
+  
+  updateInputsFromDOM();
+  refreshQAQuestions();
+  updateGroundingTab();
+
+  // Show inviting empty state initially
+  prdEmptyState.style.display = 'block';
+  prdRenderedView.style.display = 'none';
+  prdRawEditor.style.display = 'none';
+  prdQuickJumpBar.style.display = 'none';
+}
 
 function setupEventListeners() {
   // Theme Toggle
@@ -89,15 +136,61 @@ function setupEventListeners() {
   testConnectionBtn.addEventListener('click', handleTestAIConnection);
   aiProviderSelect.addEventListener('change', updateAIModalFields);
 
+  // Jira Modal
+  syncJiraBtn.addEventListener('click', openJiraModal);
+  closeJiraModalBtn.addEventListener('click', () => { jiraModal.style.display = 'none'; });
+  copyJiraModalBtn.addEventListener('click', handleCopyJiraModal);
+  downloadJiraBtn.addEventListener('click', handleDownloadJira);
+
+  // Notion Sync
+  syncNotionBtn.addEventListener('click', handleSyncNotion);
+
+  // Quick Inspiration Pills
+  document.querySelectorAll('.quick-idea-pill').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      const tplKey = e.target.dataset.tpl;
+      templateSelect.value = tplKey;
+      loadTemplate(tplKey, true);
+      showToast(`Loaded ${e.target.innerText} archetype!`);
+    });
+  });
+
+  // Empty State Action Boxes
+  const emptyActionDraft = document.getElementById('emptyActionDraft');
+  const emptyActionArchetype = document.getElementById('emptyActionArchetype');
+  const emptyActionPlayground = document.getElementById('emptyActionPlayground');
+
+  if (emptyActionDraft) {
+    emptyActionDraft.addEventListener('click', () => {
+      featureNameInput.focus();
+      showToast('Type your feature idea and click Draft 12-Phase PRD!');
+    });
+  }
+
+  if (emptyActionArchetype) {
+    emptyActionArchetype.addEventListener('click', () => {
+      templateSelect.value = 'fintech_fraud';
+      loadTemplate('fintech_fraud', true);
+      showToast('Loaded Fintech Fraud Shield archetype!');
+    });
+  }
+
+  if (emptyActionPlayground) {
+    emptyActionPlayground.addEventListener('click', () => {
+      switchPreviewTab('playground');
+    });
+  }
+
   // Template Dropdown
   templateSelect.addEventListener('change', (e) => {
-    loadTemplate(e.target.value);
+    const isCustom = e.target.value === 'custom';
+    loadTemplate(e.target.value, !isCustom);
   });
 
   // Reset Button
   resetBtn.addEventListener('click', () => {
-    templateSelect.value = 'custom';
-    loadTemplate('custom');
+    initCleanWorkspace();
+    showToast('Clean canvas reset.');
   });
 
   // Left Panel Tabs
@@ -123,16 +216,7 @@ function setupEventListeners() {
   // Right Panel Tabs
   document.querySelectorAll('.preview-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
-      document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
-      e.target.classList.add('active');
-
-      const targetView = e.target.dataset.tab;
-      document.getElementById('viewPRD').style.display = targetView === 'prd' ? 'block' : 'none';
-      document.getElementById('viewAudit').style.display = targetView === 'audit' ? 'block' : 'none';
-      document.getElementById('viewWireframe').style.display = targetView === 'wireframe' ? 'block' : 'none';
-      document.getElementById('viewTelemetry').style.display = targetView === 'telemetry' ? 'block' : 'none';
-
-      document.getElementById('prdQuickJumpBar').style.display = targetView === 'prd' ? 'flex' : 'none';
+      switchPreviewTab(e.target.dataset.tab);
     });
   });
 
@@ -177,6 +261,11 @@ function setupEventListeners() {
 
   // Raw MD Editor Toggle
   editToggleBtn.addEventListener('click', () => {
+    if (!currentPRDMarkdown) {
+      showToast('Draft a PRD first to edit raw markdown.');
+      return;
+    }
+
     isEditRawMode = !isEditRawMode;
     if (isEditRawMode) {
       prdRawEditor.value = currentPRDMarkdown;
@@ -194,19 +283,122 @@ function setupEventListeners() {
 
   // Copy PRD
   copyPrdBtn.addEventListener('click', () => {
+    if (!currentPRDMarkdown) {
+      showToast('Draft a PRD first to copy.');
+      return;
+    }
     copyToClipboard(currentPRDMarkdown).then(() => {
-      const origText = copyPrdBtn.innerText;
-      copyPrdBtn.innerText = 'Copied! ✓';
-      setTimeout(() => { copyPrdBtn.innerText = origText; }, 2000);
+      showToast('Markdown copied to clipboard! ✓');
     });
   });
 
   // Download PRD
   downloadPrdBtn.addEventListener('click', () => {
+    if (!currentPRDMarkdown) {
+      showToast('Draft a PRD first to download.');
+      return;
+    }
     const filename = `${(currentInputs.featureName || 'prd').toLowerCase().replace(/[^a-z0-9]+/g, '_')}_prd.md`;
     downloadMarkdown(filename, currentPRDMarkdown);
     triggerConfetti();
+    showToast('Downloaded PRD Markdown file!');
   });
+
+  // Playground Listeners
+  if (playgroundTempSlider && tempVal) {
+    playgroundTempSlider.addEventListener('input', (e) => {
+      tempVal.innerText = e.target.value;
+    });
+  }
+
+  if (loadFeatureContextBtn) {
+    loadFeatureContextBtn.addEventListener('click', () => {
+      updateInputsFromDOM();
+      const feature = currentInputs.featureName || 'My Feature';
+      const bu = currentInputs.businessUnit || 'Core Product';
+      const problem = currentInputs.problemStatement || 'User friction in manual workflows.';
+      playgroundCustomPrompt.value = `Feature: "${feature}"\nDomain: "${bu}"\nProblem: "${problem}"\nWrite a technical specification exploring trade-offs, architecture, and edge cases.`;
+      showToast('Active feature context loaded into playground prompt!');
+    });
+  }
+
+  if (runPlaygroundBtn) {
+    runPlaygroundBtn.addEventListener('click', handleRunPlayground);
+  }
+
+  if (copyPlaygroundBtn) {
+    copyPlaygroundBtn.addEventListener('click', () => {
+      if (!playgroundOutputText) return;
+      copyToClipboard(playgroundOutputText).then(() => {
+        showToast('Playground output copied to clipboard! ✓');
+      });
+    });
+  }
+}
+
+function switchPreviewTab(targetView) {
+  document.querySelectorAll('.preview-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === targetView);
+  });
+
+  document.getElementById('viewPRD').style.display = targetView === 'prd' ? 'block' : 'none';
+  document.getElementById('viewAudit').style.display = targetView === 'audit' ? 'block' : 'none';
+  document.getElementById('viewWireframe').style.display = targetView === 'wireframe' ? 'block' : 'none';
+  document.getElementById('viewTelemetry').style.display = targetView === 'telemetry' ? 'block' : 'none';
+  document.getElementById('viewPlayground').style.display = targetView === 'playground' ? 'block' : 'none';
+
+  prdQuickJumpBar.style.display = (targetView === 'prd' && currentPRDMarkdown) ? 'flex' : 'none';
+}
+
+// Toast Helper
+function showToast(message, duration = 3000) {
+  if (!appToast) return;
+  appToast.innerText = message;
+  appToast.classList.add('show');
+  clearTimeout(appToast._timer);
+  appToast._timer = setTimeout(() => {
+    appToast.classList.remove('show');
+  }, duration);
+}
+
+// Notion & Jira Handlers
+function handleSyncNotion() {
+  if (!currentPRDMarkdown) {
+    showToast('Draft a PRD first before syncing to Notion.');
+    return;
+  }
+
+  const notionMarkdown = convertToNotionBlocks(currentPRDMarkdown, currentInputs);
+  copyToClipboard(notionMarkdown).then(() => {
+    triggerConfetti();
+    showToast('📑 Notion-ready blocks copied! Paste directly into any Notion page.');
+  });
+}
+
+function openJiraModal() {
+  if (!currentPRDMarkdown) {
+    showToast('Draft a PRD first before exporting to Jira.');
+    return;
+  }
+
+  const jiraMarkup = convertToJiraMarkup(currentPRDMarkdown);
+  jiraMarkupText.value = jiraMarkup;
+  jiraModal.style.display = 'flex';
+}
+
+function handleCopyJiraModal() {
+  const text = jiraMarkupText.value;
+  copyToClipboard(text).then(() => {
+    triggerConfetti();
+    showToast('🔷 Jira markup copied to clipboard! Paste into Jira description.');
+  });
+}
+
+function handleDownloadJira() {
+  const text = jiraMarkupText.value;
+  const filename = `${(currentInputs.featureName || 'prd').toLowerCase().replace(/[^a-z0-9]+/g, '_')}_jira_spec.txt`;
+  downloadMarkdown(filename, text);
+  showToast('Downloaded Jira markup file!');
 }
 
 // AI Settings & Modal Management
@@ -290,22 +482,15 @@ function handleSaveAISettings() {
   updateAIEngineBadge();
   closeAIModal();
   triggerConfetti();
+  showToast(`Saved AI settings (${settings.provider})!`);
 }
 
 // Load Preset Archetype Template
-function loadTemplate(templateKey) {
+function loadTemplate(templateKey, autoGenerate = false) {
   const tpl = TEMPLATES[templateKey];
 
   if (!tpl) {
-    businessUnitInput.value = '';
-    featureNameInput.value = '';
-    epicIdInput.value = '';
-    problemStatementInput.value = '';
-    document.querySelectorAll('.persona-chip').forEach(c => c.classList.remove('selected'));
-    currentQAAnswers = {};
-    updateInputsFromDOM();
-    refreshQAQuestions();
-    updateGroundingTab();
+    initCleanWorkspace();
     return;
   }
 
@@ -332,7 +517,10 @@ function loadTemplate(templateKey) {
 
   renderQACards();
   updateGroundingTab();
-  runPRDGenerationPipeline();
+
+  if (autoGenerate) {
+    runPRDGenerationPipeline();
+  }
 }
 
 function updateInputsFromDOM() {
@@ -421,6 +609,17 @@ function renderQACards() {
 // 12-Phase PRD Generation Pipeline
 async function runPRDGenerationPipeline() {
   updateInputsFromDOM();
+
+  // If user clicks draft on completely empty fields, provide gentle defaults
+  if (!currentInputs.featureName && !currentInputs.problemStatement) {
+    currentInputs.featureName = "Intelligent User Workflow";
+    currentInputs.businessUnit = "Core Platform";
+    currentInputs.problemStatement = "Users experience critical operational friction, high latency, and workflow drop-offs due to legacy manual processes.";
+    featureNameInput.value = currentInputs.featureName;
+    businessUnitInput.value = currentInputs.businessUnit;
+    problemStatementInput.value = currentInputs.problemStatement;
+  }
+
   generateBtn.disabled = true;
 
   try {
@@ -445,6 +644,12 @@ async function runPRDGenerationPipeline() {
     currentWireframeData = getWireframeSpec(currentInputs);
     const telemetryData = getTelemetryData(currentInputs);
 
+    // Hide empty state and reveal rendered view
+    prdEmptyState.style.display = 'none';
+    prdRenderedView.style.display = 'block';
+    prdRawEditor.style.display = 'none';
+    prdQuickJumpBar.style.display = 'flex';
+
     prdRenderedView.innerHTML = marked.parse(currentPRDMarkdown);
     prdRawEditor.value = currentPRDMarkdown;
 
@@ -452,14 +657,57 @@ async function runPRDGenerationPipeline() {
     renderWireframeView(currentWireframeData);
     renderTelemetryView(telemetryData);
     updateGroundingTab();
+    triggerConfetti();
+    showToast('12-Phase PRD drafted successfully!');
   } catch (err) {
     console.error('PRD generation error:', err);
     timelineStatusBox.innerHTML = `
       <span class="timeline-pill pill-thinking" style="background:var(--color-error); color:#fff;">ERROR</span>
       <span style="font-size:11px; font-family:var(--font-code);">${err.message}</span>
     `;
+    showToast(`Generation error: ${err.message}`);
   } finally {
     generateBtn.disabled = false;
+  }
+}
+
+// Playground Execution Runner
+async function handleRunPlayground() {
+  updateInputsFromDOM();
+  runPlaygroundBtn.disabled = true;
+  runPlaygroundBtn.innerText = '⚡ Running...';
+  playgroundOutput.innerHTML = `<div style="text-align:center; padding:30px; color:var(--color-muted);">Querying model and synthesizing framework style...</div>`;
+
+  const modelId = playgroundModelSelect.value;
+  const styleId = playgroundStyleSelect.value;
+  const temperature = parseFloat(playgroundTempSlider.value);
+  const customPrompt = playgroundCustomPrompt.value;
+
+  try {
+    const res = await runPlaygroundGeneration({
+      modelId,
+      styleId,
+      temperature,
+      inputs: currentInputs,
+      customPrompt
+    });
+
+    playgroundOutputText = res.output;
+    metricModelName.innerText = res.modelName;
+    metricStyleName.innerText = res.styleName;
+    metricLatency.innerText = `${res.durationMs}ms`;
+    metricTokens.innerText = `~${res.estimatedTokens.toLocaleString()}`;
+    playgroundMetricsBar.style.display = 'flex';
+
+    playgroundOutput.innerHTML = marked.parse(res.output);
+    triggerConfetti();
+    showToast(`Benchmarked ${res.modelName} in ${res.durationMs}ms!`);
+  } catch (err) {
+    playgroundOutput.innerHTML = `<div style="color:var(--color-error); padding:20px;">Playground error: ${err.message}</div>`;
+    showToast(`Playground error: ${err.message}`);
+  } finally {
+    runPlaygroundBtn.disabled = false;
+    runPlaygroundBtn.innerText = '🚀 Run Model Test';
   }
 }
 
@@ -549,6 +797,7 @@ function renderCPOAuditDashboard(audit) {
         currentAudit = runCPOAudit(currentPRDMarkdown, currentInputs);
         renderCPOAuditDashboard(currentAudit);
         triggerConfetti();
+        showToast(`Applied: ${rec.title}`);
       }
     });
   });

@@ -8,358 +8,369 @@
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <!-- App Header -->
-  <header class="app-header">
-    <div class="brand-container">
-      <div class="brand-logo-badge">
-        <div class="logo-main-text">
-          <span class="logo-title-top">THE PRD</span>
-          <div class="logo-title-bottom-row">
-            <span class="logo-title-bot">BOT</span>
-            <div class="logo-tagline-stacked">
-              <span>CRAFTED FOR</span>
-              <span>PRODUCT</span>
-              <span>MANAGERS</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="freshworks-badge">
-        <span>⚡ Universal PM Precision Engine</span>
+  <!-- View 1: Landing Page (Exact Basis Editorial Aesthetic) -->
+  <div id="viewLanding" class="landing-page-container">
+    <header class="landing-nav">
+      <div style="display:flex; align-items:center; gap:28px;">
+        <span class="landing-brand">THE PRD BOT</span>
+        <nav class="landing-nav-links">
+          <a href="#studio" class="landing-nav-link" id="landingNavStudio">Studio</a>
+          <a href="#playground" class="landing-nav-link" id="landingNavPlayground">AI Playground</a>
+          <a href="https://github.com/QuantamRam/THEPRDBOT" target="_blank" rel="noopener noreferrer" class="landing-nav-link">GitHub ↗</a>
+        </nav>
       </div>
 
-      <!-- Editorial Nav Links (Matching Basis Nav) -->
-      <nav class="nav-links-bar">
-        <a href="#studioWorkspace" class="nav-link-item">Studio</a>
-        <a href="#studioWorkspace" class="nav-link-item" id="navPlaygroundLink">AI Playground</a>
-        <a href="#studioWorkspace" class="nav-link-item" id="navFrameworkLink">12-Phase Spec</a>
-        <a href="#studioWorkspace" class="nav-link-item" id="navJiraLink">Jira & Notion</a>
-        <a href="https://github.com/QuantamRam/THEPRDBOT" target="_blank" rel="noopener noreferrer" class="nav-link-item">GitHub ↗</a>
-      </nav>
-    </div>
-
-    <div class="header-controls">
-      <!-- Active AI Engine Indicator & Modal Trigger -->
-      <button id="aiSettingsBtn" class="btn btn-secondary btn-sm" title="Configure AI Provider & API Key">
-        <span id="aiEngineIcon">⚡</span>
-        <span id="aiEngineLabel">Engine: Built-in</span>
-      </button>
-
-      <label for="templateSelect" style="font-size:12px; font-weight:600; color:var(--color-body); white-space:nowrap;">Archetype:</label>
-      <select id="templateSelect" class="template-select">
-        <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
-        <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
-        <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
-        <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
-        <option value="devtools_apm">🛠️ DevTools: Distributed Tracing & Incident Copilot</option>
-        <option value="agent_copilot">🤖 AI Agent: Autonomous Research with Citations</option>
-        <option value="b2b_saas_rbac">🏢 B2B SaaS: Workspace & RBAC Governance</option>
-        <option value="freshworks_triage">🎧 Support Ops: Ticket Triage & SLA Escalation</option>
-      </select>
-
-      <button id="themeToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Light/Dark Theme">
-        <span id="themeIcon">🌙</span> <span id="themeLabel">Dark Mode</span>
-      </button>
-
-      <button id="resetBtn" class="btn btn-outline btn-sm" title="Start with a fresh blank canvas">Reset</button>
-
-      <a href="#studioWorkspace" class="btn btn-primary btn-sm" style="border-radius:var(--radius-pill); font-weight:600; padding:6px 14px; text-decoration:none;">Launch Studio →</a>
-    </div>
-  </header>
-
-  <!-- Hero Section (Matching Basis Editorial Aesthetic) -->
-  <section class="hero-section">
-    <div class="hero-kicker">THE PRD BOT — calm ops for product teams</div>
-    
-    <h1 class="hero-headline">
-      Less noise. More<br />
-      shipped PRDs.
-    </h1>
-
-    <p class="hero-subtitle">
-      One workspace for plans, handoffs, and automations — built for teams who care about clarity as much as velocity.
-    </p>
-
-    <div class="hero-actions">
-      <a href="#studioWorkspace" id="heroCreatePrdBtn" class="hero-pill-cta">Create your PRD →</a>
-      <a href="#studioWorkspace" id="heroOpenPlaygroundBtn" class="hero-pill-secondary">Explore AI Playground ⚡</a>
-    </div>
-
-    <div class="hero-hairline-divider"></div>
-
-    <div class="hero-stats-row">
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">6.4k</span>
-        <span class="hero-stat-desc">Workspaces created</span>
-      </div>
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">1.2M</span>
-        <span class="hero-stat-desc">Tasks completed</span>
-      </div>
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">99.97%</span>
-        <span class="hero-stat-desc">Platform uptime</span>
-      </div>
-      <div class="hero-stat-card">
-        <span class="hero-stat-value">&lt;2min</span>
-        <span class="hero-stat-desc">Median setup time</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Split Screen Workspace -->
-  <main class="app-workspace" id="studioWorkspace">
-    <!-- Left Panel: Context, Q&A, Grounding -->
-    <aside class="left-panel">
-      <div class="panel-header-tabs">
-        <button class="panel-tab active" data-tab="setup">1. Project Setup</button>
-        <button class="panel-tab" data-tab="qa">2. Domain Q&A</button>
-        <button class="panel-tab" data-tab="grounding">3. Grounding Engine</button>
-      </div>
-
-      <!-- Tab 1: Setup -->
-      <div id="tabContentSetup" class="panel-content">
-        <div class="form-group">
-          <label class="form-label" for="businessUnit">Business Unit / Industry Domain</label>
-          <input type="text" id="businessUnit" class="form-input" placeholder="e.g. Fintech & Payments, HealthTech, E-Commerce, DevTools..." />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="featureName">Feature Name / Strategic Initiative</label>
-          <input type="text" id="featureName" class="form-input" placeholder="e.g. Real-Time Fraud Shield, 1-Click Express Checkout..." />
-          
-          <!-- Quick Inspiration Pills -->
-          <div class="quick-archetype-pills">
-            <span style="font-size:11px; font-weight:600; color:var(--color-muted); align-self:center;">Quick Load:</span>
-            <button type="button" class="quick-idea-pill" data-tpl="fintech_fraud">💳 Fraud Shield</button>
-            <button type="button" class="quick-idea-pill" data-tpl="health_scribe">🏥 Clinical Scribe</button>
-            <button type="button" class="quick-idea-pill" data-tpl="ecommerce_checkout">🛒 1-Click Checkout</button>
-            <button type="button" class="quick-idea-pill" data-tpl="devtools_apm">🛠️ Tracing APM</button>
-            <button type="button" class="quick-idea-pill" data-tpl="agent_copilot">🤖 AI Agent</button>
-            <button type="button" class="quick-idea-pill" data-tpl="b2b_saas_rbac">🏢 B2B RBAC</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="epicId">Epic ID / Tracking Reference</label>
-          <input type="text" id="epicId" class="form-input" placeholder="e.g. EPIC-PRD-8920" />
-        </div>
-
-        <div class="form-group">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label class="form-label" style="margin-bottom:0;">Target Personas</label>
-            <span style="font-size:11px; color:var(--color-muted);">Click to toggle</span>
-          </div>
-          <div id="personaChipsContainer" class="persona-chips">
-            <span class="persona-chip selected" data-persona="Product Manager">Product Manager</span>
-            <span class="persona-chip selected" data-persona="Engineering Lead">Engineering Lead</span>
-            <span class="persona-chip selected" data-persona="End User">End User</span>
-            <span class="persona-chip selected" data-persona="Executive CPO">Executive CPO</span>
-            <span class="persona-chip" data-persona="Operations Specialist">Operations Specialist</span>
-            <span class="persona-chip" data-persona="Security & Compliance Lead">Security Lead</span>
-            <span class="persona-chip" data-persona="Data Analyst">Data Analyst</span>
-            <span class="persona-chip" data-persona="Finance Controller">Finance Controller</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="problemStatement">Problem Statement, Friction & Why Now?</label>
-          <textarea id="problemStatement" class="form-textarea" placeholder="Detail the core customer struggle, economic impact, current baseline metric, and what happens if we do nothing..."></textarea>
-        </div>
-      </div>
-
-      <!-- Tab 2: Domain Q&A -->
-      <div id="tabContentQA" class="panel-content" style="display:none;">
-        <div style="font-size:12px; color:var(--color-muted); margin-bottom:4px; line-height:1.4;">
-          Intelligent clarifying questions generated dynamically based on your product domain before drafting the PRD:
-        </div>
-        <div id="qaContainer" style="display:flex; flex-direction:column; gap:14px;"></div>
-      </div>
-
-      <!-- Tab 3: Grounding Engine -->
-      <div id="tabContentGrounding" class="panel-content" style="display:none;">
-        <div style="font-size:13px; color:var(--color-body); line-height:1.5;">
-          <strong>Evidence Grounding Engine:</strong> Actively synthesizes domain-specific SQL telemetry schemas, Customer Advisory Board (CAB) quotes, and competitive matrices.
-        </div>
-        <div id="groundingSummaryBox" style="background:var(--color-surface-card); border:1px solid var(--color-hairline); border-radius:var(--radius-lg); padding:16px; display:flex; flex-direction:column; gap:10px;">
-          <div style="font-weight:600; font-size:13px;" id="groundingStatusTitle">Telemetry Status: Active</div>
-          <div style="font-size:12px; color:var(--color-success);" id="groundingSqlStatus">✓ Domain SQL Telemetry Schema Ingested</div>
-          <div style="font-size:12px; color:var(--color-success);" id="groundingCabStatus">✓ Qualitative Customer Voice Evidence Grounded</div>
-          <div style="font-size:12px; color:var(--color-warning);" id="groundingRegionalStatus">⚠️ Regional Telemetry Sampling Checked</div>
-        </div>
-      </div>
-
-      <!-- Execution Action Bar -->
-      <div class="execution-bar">
-        <div id="timelineStatusBox" class="timeline-status-container">
-          <span class="timeline-pill pill-done">READY</span>
-          <span id="timelineStatusText" style="font-size:11px; font-family:var(--font-code);">Click button to draft 12-Phase PRD</span>
-        </div>
-
-        <button id="generateBtn" class="btn btn-primary" style="width:100%; justify-content:center; font-weight:600;">
-          🚀 Draft 12-Phase PRD with AI
+      <div class="landing-actions">
+        <button id="landingThemeToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Light/Dark Theme">
+          <span class="themeIcon">🌙</span> <span class="themeLabel">Dark Mode</span>
         </button>
+        <button id="landingNavCta" class="hero-pill-cta" style="padding:8px 18px; font-size:13px; cursor:pointer;">Create your PRD →</button>
       </div>
-    </aside>
+    </header>
 
-    <!-- Right Panel: Output Tabs (PRD, CPO Audit, Wireframes, Telemetry, Playground) -->
-    <section class="right-panel">
-      <nav class="preview-nav">
-        <div class="preview-tabs">
-          <button class="preview-tab active" data-tab="prd">📄 12-Phase PRD</button>
-          <button class="preview-tab" data-tab="audit">🛡️ CPO Strategic Audit</button>
-          <button class="preview-tab" data-tab="wireframe">🎨 Visual Prototype & Specs</button>
-          <button class="preview-tab" data-tab="telemetry">📊 Grounding Telemetry & SQL</button>
-          <button class="preview-tab" data-tab="playground">⚡ AI Playground</button>
-        </div>
+    <main class="landing-hero-body">
+      <div class="hero-kicker">THE PRD BOT — calm ops for product teams</div>
+      
+      <h1 class="hero-headline">
+        Less noise. More<br />
+        shipped PRDs.
+      </h1>
 
-        <div class="preview-actions">
-          <button id="syncNotionBtn" class="btn btn-secondary btn-sm" title="1-Click Copy Notion-Optimized Blocks">📑 Notion Sync</button>
-          <button id="syncJiraBtn" class="btn btn-secondary btn-sm" title="1-Click Export Atlassian Jira Markup">🔷 Jira Sync</button>
-          <button id="editToggleBtn" class="btn btn-outline btn-sm">Edit Raw MD</button>
-          <button id="copyPrdBtn" class="btn btn-secondary btn-sm">Copy MD</button>
-          <button id="downloadPrdBtn" class="btn btn-primary btn-sm">Download .md</button>
-        </div>
-      </nav>
+      <p class="hero-subtitle">
+        One workspace for plans, handoffs, and automations — built for teams who care about clarity as much as velocity.
+      </p>
 
-      <!-- Quick Jump Bar for 12-Phase PRD -->
-      <div id="prdQuickJumpBar" class="prd-quick-jump-bar" style="display:none;">
-        <span style="font-size:11px; font-weight:700; color:var(--color-muted); text-transform:uppercase; margin-right:4px;">Quick Jump:</span>
-        <button class="jump-pill" data-target="phase-1">1. Exec Summary</button>
-        <button class="jump-pill" data-target="phase-3">3. Personas</button>
-        <button class="jump-pill" data-target="phase-5">5. SQL Telemetry</button>
-        <button class="jump-pill" data-target="phase-7">7. Functional Reqs</button>
-        <button class="jump-pill" data-target="phase-9">9. User Stories</button>
-        <button class="jump-pill" data-target="phase-10">10. Architecture</button>
-        <button class="jump-pill" data-target="phase-11">11. Rollout</button>
-        <button class="jump-pill" data-target="phase-12">12. Metrics</button>
+      <div class="hero-actions">
+        <button id="heroCreatePrdBtn" class="hero-pill-cta" style="cursor:pointer;">Create your PRD →</button>
+        <button id="heroOpenPlaygroundBtn" class="hero-pill-secondary" style="cursor:pointer;">Explore AI Playground ⚡</button>
       </div>
 
-      <!-- View: 12-Phase PRD -->
-      <div id="viewPRD" class="preview-content">
-        <!-- Elegant Studio Ready Empty State -->
-        <div id="prdEmptyState" class="empty-state-card">
-          <div class="empty-state-icon">🚀</div>
-          <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to THE PRD BOT Studio</h2>
-          <p style="font-size:13.5px; color:var(--color-body); max-width:540px; margin:0 auto 24px; line-height:1.6;">
-            Your clean canvas is ready. Draft an executive-ready, 12-phase PRD backed by real SQL telemetry, Gherkin acceptance criteria, and interactive prototypes.
-          </p>
+      <div class="hero-hairline-divider"></div>
 
-          <div class="empty-state-grid">
-            <div class="empty-action-box" id="emptyActionDraft">
-              <div style="font-size:24px; margin-bottom:6px;">✍️</div>
-              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">1. Start from Your Idea</div>
-              <div style="font-size:12px; color:var(--color-muted);">Fill in your feature idea on the left and click "Draft 12-Phase PRD".</div>
-            </div>
+      <div class="hero-stats-row">
+        <div class="hero-stat-card">
+          <span class="hero-stat-value">6.4k</span>
+          <span class="hero-stat-desc">Workspaces created</span>
+        </div>
+        <div class="hero-stat-card">
+          <span class="hero-stat-value">1.2M</span>
+          <span class="hero-stat-desc">Tasks completed</span>
+        </div>
+        <div class="hero-stat-card">
+          <span class="hero-stat-value">99.97%</span>
+          <span class="hero-stat-desc">Platform uptime</span>
+        </div>
+        <div class="hero-stat-card">
+          <span class="hero-stat-value">&lt;2min</span>
+          <span class="hero-stat-desc">Median setup time</span>
+        </div>
+      </div>
+    </main>
 
-            <div class="empty-action-box" id="emptyActionArchetype">
-              <div style="font-size:24px; margin-bottom:6px;">💡</div>
-              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">2. Load an Archetype</div>
-              <div style="font-size:12px; color:var(--color-muted);">Explore pre-built patterns for Fintech, HealthTech, E-Commerce, or AI Agents.</div>
-            </div>
+    <footer class="app-footer">
+      <div><span>THE PRD BOT — First-principles engineering specs for product teams</span></div>
+      <div class="attribution-text">DESIGNED BY RAM CHANDAR SANABOYINA</div>
+    </footer>
+  </div>
 
-            <div class="empty-action-box" id="emptyActionPlayground">
-              <div style="font-size:24px; margin-bottom:6px;">⚡</div>
-              <div style="font-weight:700; font-size:14px; margin-bottom:4px;">3. Open AI Playground</div>
-              <div style="font-size:12px; color:var(--color-muted);">Test frontier models (Gemini, Claude, GPT-4o) with Amazon 6-Pager & Stripe styles.</div>
-            </div>
+  <!-- View 2: Studio Workspace (Main Application) -->
+  <div id="viewStudio" class="studio-container" style="display:none;">
+    <header class="studio-header">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <button id="backToHomeBtn" class="btn btn-outline btn-sm">← Back to Overview</button>
+        <span style="font-weight:800; font-size:16px; letter-spacing:-0.5px;">THE PRD BOT</span>
+      </div>
+
+      <div class="header-controls">
+        <label for="templateSelect" style="font-size:12px; font-weight:600; color:var(--color-body); white-space:nowrap;">Archetype:</label>
+        <select id="templateSelect" class="template-select">
+          <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
+          <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
+          <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
+          <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
+          <option value="devtools_apm">🛠️ DevTools: Distributed Tracing & Incident Copilot</option>
+          <option value="agent_copilot">🤖 AI Agent: Autonomous Research with Citations</option>
+          <option value="b2b_saas_rbac">🏢 B2B SaaS: Workspace & RBAC Governance</option>
+          <option value="freshworks_triage">🎧 Support Ops: Ticket Triage & SLA Escalation</option>
+        </select>
+
+        <!-- Active AI Engine Indicator & Modal Trigger -->
+        <button id="aiSettingsBtn" class="btn btn-secondary btn-sm" title="Configure AI Provider & API Key">
+          <span id="aiEngineIcon">⚡</span>
+          <span id="aiEngineLabel">Engine: Built-in</span>
+        </button>
+
+        <button id="studioThemeToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Light/Dark Theme">
+          <span class="themeIcon">🌙</span> <span class="themeLabel">Dark Mode</span>
+        </button>
+
+        <button id="resetBtn" class="btn btn-outline btn-sm" title="Start with a fresh blank canvas">Reset</button>
+      </div>
+    </header>
+
+    <!-- Split Screen Workspace -->
+    <main class="app-workspace" id="studioWorkspace">
+      <!-- Left Panel: Context, Q&A, Grounding -->
+      <aside class="left-panel">
+        <div class="panel-header-tabs">
+          <button class="panel-tab active" data-tab="setup">1. Project Setup</button>
+          <button class="panel-tab" data-tab="qa">2. Domain Q&A</button>
+          <button class="panel-tab" data-tab="grounding">3. Grounding Engine</button>
+        </div>
+
+        <!-- Tab 1: Setup -->
+        <div id="tabContentSetup" class="panel-content">
+          <div class="form-group">
+            <label class="form-label" for="businessUnit">Business Unit / Industry Domain</label>
+            <input type="text" id="businessUnit" class="form-input" placeholder="e.g. Fintech & Payments, HealthTech, E-Commerce, DevTools..." />
           </div>
-        </div>
 
-        <div id="prdRenderedView" class="markdown-body" style="display:none;"></div>
-        <textarea id="prdRawEditor" class="form-textarea" style="display:none; width:100%; height:100%; font-family:var(--font-code); font-size:13px; line-height:1.5; padding:16px; border:none; outline:none;" spellcheck="false"></textarea>
-      </div>
-
-      <!-- View: CPO Audit -->
-      <div id="viewAudit" class="preview-content" style="display:none;">
-        <div id="auditContainer" class="cpo-dashboard"></div>
-      </div>
-
-      <!-- View: Visual Wireframes & Specs -->
-      <div id="viewWireframe" class="preview-content" style="display:none;">
-        <div id="wireframeContainer" class="wireframe-container"></div>
-      </div>
-
-      <!-- View: Telemetry & SQL -->
-      <div id="viewTelemetry" class="preview-content" style="display:none;">
-        <div id="telemetryContainer" class="telemetry-dashboard"></div>
-      </div>
-
-      <!-- View: AI Model Playground -->
-      <div id="viewPlayground" class="preview-content" style="display:none;">
-        <div class="playground-container">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-            <div>
-              <div style="font-size:18px; font-weight:700;">⚡ AI Model & Framework Playground</div>
-              <div style="font-size:13px; color:var(--color-body);">Benchmark frontier models and test different PRD styles (Amazon 6-Pager, Stripe Technical, Reforge).</div>
-            </div>
-            <button id="runPlaygroundBtn" class="btn btn-primary btn-sm">🚀 Run Model Test</button>
-          </div>
-
-          <!-- Model & Style Selectors -->
-          <div class="playground-controls-grid">
-            <div class="form-group">
-              <label class="form-label" for="playgroundModelSelect">Frontier Model</label>
-              <select id="playgroundModelSelect" class="form-input">
-                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Ultra Fast / Recommended)</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning / 2M Context)</option>
-                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Lightweight / Fast)</option>
-                <option value="gpt-4o">OpenAI GPT-4o (Flagship Omni)</option>
-                <option value="gpt-4o-mini">OpenAI GPT-4o Mini (Cost Efficient)</option>
-                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Superior Writing)</option>
-                <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B (Groq / Open Weights)</option>
-                <option value="builtin-local-engine">Built-in Precision Engine (Offline / Instant)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="playgroundStyleSelect">PRD Framework Style</label>
-              <select id="playgroundStyleSelect" class="form-input">
-                <option value="standard">12-Phase Executive PRD (Standard Production)</option>
-                <option value="amazon_6pager">Amazon 6-Pager (Working Backwards + Press Release)</option>
-                <option value="stripe_technical">Stripe Technical Spec (API-First / Idempotency)</option>
-                <option value="reforge_growth">Reforge Growth PRD (Retention Loops & Funnels)</option>
-                <option value="lean_1pager">Lenny's 1-Page Lean PRD (Ship in 2 Weeks)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <div style="display:flex; justify-content:space-between;">
-                <label class="form-label" for="playgroundTempSlider">Temperature: <span id="tempVal">0.2</span></label>
-                <span style="font-size:11px; color:var(--color-muted);">Precise & Consistent</span>
-              </div>
-              <input type="range" id="playgroundTempSlider" min="0" max="1" step="0.1" value="0.2" style="width:100%; cursor:pointer;" />
+          <div class="form-group">
+            <label class="form-label" for="featureName">Feature Name / Strategic Initiative</label>
+            <input type="text" id="featureName" class="form-input" placeholder="e.g. Real-Time Fraud Shield, 1-Click Express Checkout..." />
+            
+            <!-- Quick Inspiration Pills -->
+            <div class="quick-archetype-pills">
+              <span style="font-size:11px; font-weight:600; color:var(--color-muted); align-self:center;">Quick Load:</span>
+              <button type="button" class="quick-idea-pill" data-tpl="fintech_fraud">💳 Fraud Shield</button>
+              <button type="button" class="quick-idea-pill" data-tpl="health_scribe">🏥 Clinical Scribe</button>
+              <button type="button" class="quick-idea-pill" data-tpl="ecommerce_checkout">🛒 1-Click Checkout</button>
+              <button type="button" class="quick-idea-pill" data-tpl="devtools_apm">🛠️ Tracing APM</button>
+              <button type="button" class="quick-idea-pill" data-tpl="agent_copilot">🤖 AI Agent</button>
+              <button type="button" class="quick-idea-pill" data-tpl="b2b_saas_rbac">🏢 B2B RBAC</button>
             </div>
           </div>
 
-          <!-- Prompt Customizer -->
-          <div class="form-group" style="margin-top:14px;">
+          <div class="form-group">
+            <label class="form-label" for="epicId">Epic ID / Tracking Reference</label>
+            <input type="text" id="epicId" class="form-input" placeholder="e.g. EPIC-PRD-8920" />
+          </div>
+
+          <div class="form-group">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label class="form-label" style="margin-bottom:0;" for="playgroundCustomPrompt">Custom Playground Prompt (Optional)</label>
-              <button id="loadFeatureContextBtn" class="btn btn-outline btn-sm" style="font-size:11px; padding:2px 8px;">Load Active Feature Context</button>
+              <label class="form-label" style="margin-bottom:0;">Target Personas</label>
+              <span style="font-size:11px; color:var(--color-muted);">Click to toggle</span>
             </div>
-            <textarea id="playgroundCustomPrompt" class="form-textarea" style="height:90px;" placeholder="Leave blank to use the active feature context with your chosen PRD style, or write a custom test instruction..."></textarea>
+            <div id="personaChipsContainer" class="persona-chips">
+              <span class="persona-chip selected" data-persona="Product Manager">Product Manager</span>
+              <span class="persona-chip selected" data-persona="Engineering Lead">Engineering Lead</span>
+              <span class="persona-chip selected" data-persona="End User">End User</span>
+              <span class="persona-chip selected" data-persona="Executive CPO">Executive CPO</span>
+              <span class="persona-chip" data-persona="Operations Specialist">Operations Specialist</span>
+              <span class="persona-chip" data-persona="Security & Compliance Lead">Security Lead</span>
+              <span class="persona-chip" data-persona="Data Analyst">Data Analyst</span>
+              <span class="persona-chip" data-persona="Finance Controller">Finance Controller</span>
+            </div>
           </div>
 
-          <!-- Playground Output Metrics Bar -->
-          <div id="playgroundMetricsBar" class="playground-metrics-bar" style="display:none;">
-            <div><strong>Model:</strong> <span id="metricModelName">-</span></div>
-            <div><strong>Style:</strong> <span id="metricStyleName">-</span></div>
-            <div><strong>Latency:</strong> <span id="metricLatency">-</span></div>
-            <div><strong>Est. Tokens:</strong> <span id="metricTokens">-</span></div>
-            <button id="copyPlaygroundBtn" class="btn btn-outline btn-sm" style="margin-left:auto;">Copy Output</button>
+          <div class="form-group">
+            <label class="form-label" for="problemStatement">Problem Statement, Friction & Why Now?</label>
+            <textarea id="problemStatement" class="form-textarea" placeholder="Detail the core customer struggle, economic impact, current baseline metric, and what happens if we do nothing..."></textarea>
+          </div>
+        </div>
+
+        <!-- Tab 2: Domain Q&A -->
+        <div id="tabContentQA" class="panel-content" style="display:none;">
+          <div style="font-size:12px; color:var(--color-muted); margin-bottom:4px; line-height:1.4;">
+            Intelligent clarifying questions generated dynamically based on your product domain before drafting the PRD:
+          </div>
+          <div id="qaContainer" style="display:flex; flex-direction:column; gap:14px;"></div>
+        </div>
+
+        <!-- Tab 3: Grounding Engine -->
+        <div id="tabContentGrounding" class="panel-content" style="display:none;">
+          <div style="font-size:13px; color:var(--color-body); line-height:1.5;">
+            <strong>Evidence Grounding Engine:</strong> Actively synthesizes domain-specific SQL telemetry schemas, Customer Advisory Board (CAB) quotes, and competitive matrices.
+          </div>
+          <div id="groundingSummaryBox" style="background:var(--color-surface-card); border:1px solid var(--color-hairline); border-radius:var(--radius-lg); padding:16px; display:flex; flex-direction:column; gap:10px;">
+            <div style="font-weight:600; font-size:13px;" id="groundingStatusTitle">Telemetry Status: Active</div>
+            <div style="font-size:12px; color:var(--color-success);" id="groundingSqlStatus">✓ Domain SQL Telemetry Schema Ingested</div>
+            <div style="font-size:12px; color:var(--color-success);" id="groundingCabStatus">✓ Qualitative Customer Voice Evidence Grounded</div>
+            <div style="font-size:12px; color:var(--color-warning);" id="groundingRegionalStatus">⚠️ Regional Telemetry Sampling Checked</div>
+          </div>
+        </div>
+
+        <!-- Execution Action Bar -->
+        <div class="execution-bar">
+          <div id="timelineStatusBox" class="timeline-status-container">
+            <span class="timeline-pill pill-done">READY</span>
+            <span id="timelineStatusText" style="font-size:11px; font-family:var(--font-code);">Click button to draft 12-Phase PRD</span>
           </div>
 
-          <!-- Playground Result Container -->
-          <div id="playgroundOutput" class="playground-output-box">
-            <div style="color:var(--color-muted); text-align:center; padding:40px 20px;">
-              Select a model and PRD style, then click <strong>"🚀 Run Model Test"</strong> to compare outputs.
+          <button id="generateBtn" class="btn btn-primary" style="width:100%; justify-content:center; font-weight:600;">
+            🚀 Draft 12-Phase PRD with AI
+          </button>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Output Tabs (PRD, CPO Audit, Wireframes, Telemetry, Playground) -->
+      <section class="right-panel">
+        <nav class="preview-nav">
+          <div class="preview-tabs">
+            <button class="preview-tab active" data-tab="prd">📄 12-Phase PRD</button>
+            <button class="preview-tab" data-tab="audit">🛡️ CPO Strategic Audit</button>
+            <button class="preview-tab" data-tab="wireframe">🎨 Visual Prototype & Specs</button>
+            <button class="preview-tab" data-tab="telemetry">📊 Grounding Telemetry & SQL</button>
+            <button class="preview-tab" data-tab="playground">⚡ AI Playground</button>
+          </div>
+
+          <div class="preview-actions">
+            <button id="syncNotionBtn" class="btn btn-secondary btn-sm" title="1-Click Copy Notion-Optimized Blocks">📑 Notion Sync</button>
+            <button id="syncJiraBtn" class="btn btn-secondary btn-sm" title="1-Click Export Atlassian Jira Markup">🔷 Jira Sync</button>
+            <button id="editToggleBtn" class="btn btn-outline btn-sm">Edit Raw MD</button>
+            <button id="copyPrdBtn" class="btn btn-secondary btn-sm">Copy MD</button>
+            <button id="downloadPrdBtn" class="btn btn-primary btn-sm">Download .md</button>
+          </div>
+        </nav>
+
+        <!-- Quick Jump Bar for 12-Phase PRD -->
+        <div id="prdQuickJumpBar" class="prd-quick-jump-bar" style="display:none;">
+          <span style="font-size:11px; font-weight:700; color:var(--color-muted); text-transform:uppercase; margin-right:4px;">Quick Jump:</span>
+          <button class="jump-pill" data-target="phase-1">1. Exec Summary</button>
+          <button class="jump-pill" data-target="phase-3">3. Personas</button>
+          <button class="jump-pill" data-target="phase-5">5. SQL Telemetry</button>
+          <button class="jump-pill" data-target="phase-7">7. Functional Reqs</button>
+          <button class="jump-pill" data-target="phase-9">9. User Stories</button>
+          <button class="jump-pill" data-target="phase-10">10. Architecture</button>
+          <button class="jump-pill" data-target="phase-11">11. Rollout</button>
+          <button class="jump-pill" data-target="phase-12">12. Metrics</button>
+        </div>
+
+        <!-- View: 12-Phase PRD -->
+        <div id="viewPRD" class="preview-content">
+          <!-- Elegant Studio Ready Empty State -->
+          <div id="prdEmptyState" class="empty-state-card">
+            <div class="empty-state-icon">🚀</div>
+            <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to THE PRD BOT Studio</h2>
+            <p style="font-size:13.5px; color:var(--color-body); max-width:540px; margin:0 auto 24px; line-height:1.6;">
+              Your clean canvas is ready. Draft an executive-ready, 12-phase PRD backed by real SQL telemetry, Gherkin acceptance criteria, and interactive prototypes.
+            </p>
+
+            <div class="empty-state-grid">
+              <div class="empty-action-box" id="emptyActionDraft">
+                <div style="font-size:24px; margin-bottom:6px;">✍️</div>
+                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">1. Start from Your Idea</div>
+                <div style="font-size:12px; color:var(--color-muted);">Fill in your feature idea on the left and click "Draft 12-Phase PRD".</div>
+              </div>
+
+              <div class="empty-action-box" id="emptyActionArchetype">
+                <div style="font-size:24px; margin-bottom:6px;">💡</div>
+                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">2. Load an Archetype</div>
+                <div style="font-size:12px; color:var(--color-muted);">Explore pre-built patterns for Fintech, HealthTech, E-Commerce, or AI Agents.</div>
+              </div>
+
+              <div class="empty-action-box" id="emptyActionPlayground">
+                <div style="font-size:24px; margin-bottom:6px;">⚡</div>
+                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">3. Open AI Playground</div>
+                <div style="font-size:12px; color:var(--color-muted);">Test frontier models (Gemini, Claude, GPT-4o) with Amazon 6-Pager & Stripe styles.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="prdRenderedView" class="markdown-body" style="display:none;"></div>
+          <textarea id="prdRawEditor" class="form-textarea" style="display:none; width:100%; height:100%; font-family:var(--font-code); font-size:13px; line-height:1.5; padding:16px; border:none; outline:none;" spellcheck="false"></textarea>
+        </div>
+
+        <!-- View: CPO Audit -->
+        <div id="viewAudit" class="preview-content" style="display:none;">
+          <div id="auditContainer" class="cpo-dashboard"></div>
+        </div>
+
+        <!-- View: Visual Wireframes & Specs -->
+        <div id="viewWireframe" class="preview-content" style="display:none;">
+          <div id="wireframeContainer" class="wireframe-container"></div>
+        </div>
+
+        <!-- View: Telemetry & SQL -->
+        <div id="viewTelemetry" class="preview-content" style="display:none;">
+          <div id="telemetryContainer" class="telemetry-dashboard"></div>
+        </div>
+
+        <!-- View: AI Model Playground -->
+        <div id="viewPlayground" class="preview-content" style="display:none;">
+          <div class="playground-container">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+              <div>
+                <div style="font-size:18px; font-weight:700;">⚡ AI Model & Framework Playground</div>
+                <div style="font-size:13px; color:var(--color-body);">Benchmark frontier models and test different PRD styles (Amazon 6-Pager, Stripe Technical, Reforge).</div>
+              </div>
+              <button id="runPlaygroundBtn" class="btn btn-primary btn-sm">🚀 Run Model Test</button>
+            </div>
+
+            <!-- Model & Style Selectors -->
+            <div class="playground-controls-grid">
+              <div class="form-group">
+                <label class="form-label" for="playgroundModelSelect">Frontier Model</label>
+                <select id="playgroundModelSelect" class="form-input">
+                  <option value="gemini-2.0-flash">Gemini 2.0 Flash (Ultra Fast / Recommended)</option>
+                  <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning / 2M Context)</option>
+                  <option value="gemini-1.5-flash">Gemini 1.5 Flash (Lightweight / Fast)</option>
+                  <option value="gpt-4o">OpenAI GPT-4o (Flagship Omni)</option>
+                  <option value="gpt-4o-mini">OpenAI GPT-4o Mini (Cost Efficient)</option>
+                  <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Superior Writing)</option>
+                  <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B (Groq / Open Weights)</option>
+                  <option value="builtin-local-engine">Built-in Precision Engine (Offline / Instant)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="playgroundStyleSelect">PRD Framework Style</label>
+                <select id="playgroundStyleSelect" class="form-input">
+                  <option value="standard">12-Phase Executive PRD (Standard Production)</option>
+                  <option value="amazon_6pager">Amazon 6-Pager (Working Backwards + Press Release)</option>
+                  <option value="stripe_technical">Stripe Technical Spec (API-First / Idempotency)</option>
+                  <option value="reforge_growth">Reforge Growth PRD (Retention Loops & Funnels)</option>
+                  <option value="lean_1pager">Lenny's 1-Page Lean PRD (Ship in 2 Weeks)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <div style="display:flex; justify-content:space-between;">
+                  <label class="form-label" for="playgroundTempSlider">Temperature: <span id="tempVal">0.2</span></label>
+                  <span style="font-size:11px; color:var(--color-muted);">Precise & Consistent</span>
+                </div>
+                <input type="range" id="playgroundTempSlider" min="0" max="1" step="0.1" value="0.2" style="width:100%; cursor:pointer;" />
+              </div>
+            </div>
+
+            <!-- Prompt Customizer -->
+            <div class="form-group" style="margin-top:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label class="form-label" style="margin-bottom:0;" for="playgroundCustomPrompt">Custom Playground Prompt (Optional)</label>
+                <button id="loadFeatureContextBtn" class="btn btn-outline btn-sm" style="font-size:11px; padding:2px 8px;">Load Active Feature Context</button>
+              </div>
+              <textarea id="playgroundCustomPrompt" class="form-textarea" style="height:90px;" placeholder="Leave blank to use the active feature context with your chosen PRD style, or write a custom test instruction..."></textarea>
+            </div>
+
+            <!-- Playground Output Metrics Bar -->
+            <div id="playgroundMetricsBar" class="playground-metrics-bar" style="display:none;">
+              <div><strong>Model:</strong> <span id="metricModelName">-</span></div>
+              <div><strong>Style:</strong> <span id="metricStyleName">-</span></div>
+              <div><strong>Latency:</strong> <span id="metricLatency">-</span></div>
+              <div><strong>Est. Tokens:</strong> <span id="metricTokens">-</span></div>
+              <button id="copyPlaygroundBtn" class="btn btn-outline btn-sm" style="margin-left:auto;">Copy Output</button>
+            </div>
+
+            <!-- Playground Result Container -->
+            <div id="playgroundOutput" class="playground-output-box">
+              <div style="color:var(--color-muted); text-align:center; padding:40px 20px;">
+                Select a model and PRD style, then click <strong>"🚀 Run Model Test"</strong> to compare outputs.
+              </div>
             </div>
           </div>
         </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div>
+        <span>THE PRD BOT — Studio Workspace</span>
       </div>
-    </section>
-  </main>
+      <div class="attribution-text">
+        FIRST-PRINCIPLES PRODUCT LIFECYCLE ENGINE
+      </div>
+    </footer>
+  </div>
 
   <!-- AI Settings Modal -->
   <div id="aiModal" class="modal-backdrop" style="display:none;">
@@ -446,16 +457,6 @@
 
   <!-- Floating Toast Notification -->
   <div id="appToast" class="app-toast"></div>
-
-  <!-- Footer -->
-  <footer class="app-footer">
-    <div>
-      <span>THE PRD BOT — AI-Native PRD Platform for Product Managers across the Nation</span>
-    </div>
-    <div class="attribution-text">
-      FIRST-PRINCIPLES PRODUCT LIFECYCLE ENGINE
-    </div>
-  </footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>

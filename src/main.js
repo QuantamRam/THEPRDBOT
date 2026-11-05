@@ -21,10 +21,18 @@ let isEditRawMode = false;
 let playgroundOutputText = '';
 
 // DOM Elements
+const viewLanding = document.getElementById('viewLanding');
+const viewStudio = document.getElementById('viewStudio');
+const landingNavStudio = document.getElementById('landingNavStudio');
+const landingNavPlayground = document.getElementById('landingNavPlayground');
+const landingNavCta = document.getElementById('landingNavCta');
+const heroCreatePrdBtn = document.getElementById('heroCreatePrdBtn');
+const heroOpenPlaygroundBtn = document.getElementById('heroOpenPlaygroundBtn');
+const backToHomeBtn = document.getElementById('backToHomeBtn');
+
 const templateSelect = document.getElementById('templateSelect');
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-const themeIcon = document.getElementById('themeIcon');
-const themeLabel = document.getElementById('themeLabel');
+const landingThemeToggleBtn = document.getElementById('landingThemeToggleBtn');
+const studioThemeToggleBtn = document.getElementById('studioThemeToggleBtn');
 const resetBtn = document.getElementById('resetBtn');
 
 const aiSettingsBtn = document.getElementById('aiSettingsBtn');
@@ -103,7 +111,34 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updateAIEngineBadge();
   initCleanWorkspace();
+
+  // Hash-based initial routing
+  if (window.location.hash === '#studio') {
+    navigateToStudio('prd');
+  } else if (window.location.hash === '#playground') {
+    navigateToStudio('playground');
+  } else {
+    navigateToLanding();
+  }
 });
+
+function navigateToStudio(targetTab = 'prd') {
+  if (viewLanding) viewLanding.style.display = 'none';
+  if (viewStudio) viewStudio.style.display = 'flex';
+  switchPreviewTab(targetTab);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (targetTab === 'prd') {
+    setTimeout(() => {
+      if (featureNameInput) featureNameInput.focus();
+    }, 150);
+  }
+}
+
+function navigateToLanding() {
+  if (viewStudio) viewStudio.style.display = 'none';
+  if (viewLanding) viewLanding.style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function initCleanWorkspace() {
   // Clean initial state without auto-generating noisy walls of text
@@ -126,7 +161,8 @@ function initCleanWorkspace() {
 
 function setupEventListeners() {
   // Theme Toggle
-  themeToggleBtn.addEventListener('click', toggleTheme);
+  if (landingThemeToggleBtn) landingThemeToggleBtn.addEventListener('click', toggleTheme);
+  if (studioThemeToggleBtn) studioThemeToggleBtn.addEventListener('click', toggleTheme);
 
   // AI Settings Modal
   aiSettingsBtn.addEventListener('click', openAIModal);
@@ -136,51 +172,13 @@ function setupEventListeners() {
   testConnectionBtn.addEventListener('click', handleTestAIConnection);
   aiProviderSelect.addEventListener('change', updateAIModalFields);
 
-  // Hero Section & Nav Links Handlers
-  const heroCreatePrdBtn = document.getElementById('heroCreatePrdBtn');
-  const heroOpenPlaygroundBtn = document.getElementById('heroOpenPlaygroundBtn');
-  const navPlaygroundLink = document.getElementById('navPlaygroundLink');
-  const navFrameworkLink = document.getElementById('navFrameworkLink');
-  const navJiraLink = document.getElementById('navJiraLink');
-
-  if (heroCreatePrdBtn) {
-    heroCreatePrdBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => featureNameInput.focus(), 400);
-    });
-  }
-
-  if (heroOpenPlaygroundBtn) {
-    heroOpenPlaygroundBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
-      switchPreviewTab('playground');
-    });
-  }
-
-  if (navPlaygroundLink) {
-    navPlaygroundLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
-      switchPreviewTab('playground');
-    });
-  }
-
-  if (navFrameworkLink) {
-    navFrameworkLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
-      switchPreviewTab('prd');
-    });
-  }
-
-  if (navJiraLink) {
-    navJiraLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      openJiraModal();
-    });
-  }
+  // Navigation between Landing Page and Studio Workspace
+  if (heroCreatePrdBtn) heroCreatePrdBtn.addEventListener('click', () => navigateToStudio('prd'));
+  if (landingNavCta) landingNavCta.addEventListener('click', () => navigateToStudio('prd'));
+  if (landingNavStudio) landingNavStudio.addEventListener('click', () => navigateToStudio('prd'));
+  if (heroOpenPlaygroundBtn) heroOpenPlaygroundBtn.addEventListener('click', () => navigateToStudio('playground'));
+  if (landingNavPlayground) landingNavPlayground.addEventListener('click', () => navigateToStudio('playground'));
+  if (backToHomeBtn) backToHomeBtn.addEventListener('click', navigateToLanding);
 
   // Jira Modal
   syncJiraBtn.addEventListener('click', openJiraModal);
@@ -1064,6 +1062,10 @@ function toggleTheme() {
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
   document.documentElement.setAttribute('data-theme', newTheme);
-  themeIcon.innerText = newTheme === 'dark' ? '☀️' : '🌙';
-  themeLabel.innerText = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+  document.querySelectorAll('.themeIcon').forEach(el => {
+    el.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+  });
+  document.querySelectorAll('.themeLabel').forEach(el => {
+    el.innerText = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+  });
 }

@@ -87,98 +87,192 @@
     </footer>
   </div>
 
-  <!-- View 2: Studio Workspace (Main Application) -->
-  <div id="viewStudio" class="studio-container" style="display:none;">
-    <header class="studio-header">
-      <div style="display:flex; align-items:center; gap:16px;">
-        <button id="backToHomeBtn" class="btn btn-outline btn-sm">← Back to Overview</button>
-        <span style="font-weight:800; font-size:16px; letter-spacing:-0.5px;">THE PRD BOT</span>
-      </div>
-
-      <div class="header-controls">
-        <label for="templateSelect" style="font-size:12px; font-weight:600; color:var(--color-body); white-space:nowrap;">Archetype:</label>
-        <select id="templateSelect" class="template-select">
-          <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
-          <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
-          <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
-          <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
-          <option value="devtools_apm">🛠️ DevTools: Distributed Tracing & Incident Copilot</option>
-          <option value="agent_copilot">🤖 AI Agent: Autonomous Research with Citations</option>
-          <option value="b2b_saas_rbac">🏢 B2B SaaS: Workspace & RBAC Governance</option>
-          <option value="freshworks_triage">🎧 Support Ops: Ticket Triage & SLA Escalation</option>
-        </select>
-
-        <!-- Active AI Engine Indicator & Modal Trigger -->
-        <button id="aiSettingsBtn" class="btn btn-secondary btn-sm" title="Configure AI Provider & API Key">
-          <span id="aiEngineIcon">⚡</span>
-          <span id="aiEngineLabel">Engine: Built-in</span>
-        </button>
-
-        <button id="studioThemeToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Light/Dark Theme">
-          <span class="themeIcon">🌙</span> <span class="themeLabel">Dark Mode</span>
-        </button>
-
-        <button id="resetBtn" class="btn btn-outline btn-sm" title="Start with a fresh blank canvas">Reset</button>
-      </div>
-    </header>
-
-    <!-- Split Screen Workspace -->
-    <main class="app-workspace" id="studioWorkspace">
-      <!-- Left Panel: Context, Q&A, Grounding -->
-      <aside class="left-panel">
-        <div class="panel-header-tabs">
-          <button class="panel-tab active" data-tab="setup">1. Project Setup</button>
-          <button class="panel-tab" data-tab="qa">2. Domain Q&A</button>
-          <button class="panel-tab" data-tab="grounding">3. Grounding Engine</button>
+  <!-- View 2: Studio Workspace (Main Application - Matching Screenshot Layout) -->
+  <div id="viewStudio" class="studio-app-layout" style="display:none;">
+    <!-- Persistent Global Sidebar (Screenshot Match) -->
+    <aside class="studio-global-sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand-box">
+          <div class="sidebar-brand-main">THE PRD<br/>BOT</div>
+          <div class="sidebar-brand-divider"></div>
+          <div class="sidebar-brand-sub">CRAFTED FOR<br/>PRODUCT<br/>MANAGERS</div>
         </div>
+
+        <button id="sidebarNewPrdBtn" class="sidebar-new-btn" title="Create a new blank PRD">
+          <span style="font-size:18px; line-height:1; font-weight:700;">+</span>
+          <span>New PRD</span>
+        </button>
+
+        <nav class="sidebar-nav-list">
+          <button class="sidebar-nav-item active" id="navItemOverview" title="Back to Landing Overview">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Overview</span>
+          </button>
+          <button class="sidebar-nav-item" id="navItemProjects" title="View Recent Projects">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>My Projects</span>
+          </button>
+          <button class="sidebar-nav-item" id="navItemTemplates" title="Browse PRD Archetypes">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Templates</span>
+          </button>
+          <button class="sidebar-nav-item" id="navItemIntegrations" title="Jira & Notion Integrations">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <span>Integrations</span>
+          </button>
+          <button class="sidebar-nav-item" id="navItemTeam" title="Team Collaborators">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>Team</span>
+          </button>
+          <button class="sidebar-nav-item" id="navItemSettings" title="AI Engines & Settings">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Settings</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="credits-card">
+          <div class="credits-header">
+            <span>PRD Credits</span>
+            <span class="info-circle" title="Allocated monthly AI PRD generations">ⓘ</span>
+          </div>
+          <div class="credits-count">12 / 20 used</div>
+          <div class="credits-bar-bg">
+            <div class="credits-bar-fill" style="width: 60%;"></div>
+          </div>
+        </div>
+
+        <div class="upgrade-card" id="sidebarUpgradeBtn">
+          <div class="upgrade-title-row">
+            <span class="upgrade-title">⚡ Upgrade to Pro</span>
+            <span class="upgrade-arrow">→</span>
+          </div>
+          <p class="upgrade-sub">More credits, team collaboration and integrations.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Studio Content Body -->
+    <div class="studio-main-body">
+      <header class="studio-header">
+        <div class="studio-header-left">
+          <button id="backToHomeBtn" class="btn btn-outline btn-sm">← Back to Overview</button>
+          <div class="studio-title-badge">
+            <span class="studio-brand-name">THE PRD BOT</span>
+            <span class="studio-pill-badge">Studio</span>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <label for="templateSelect" class="header-control-label">PRD Archetype:</label>
+          <select id="templateSelect" class="template-select">
+            <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
+            <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
+            <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
+            <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
+            <option value="devtools_apm">🛠️ DevTools: Distributed Tracing & Incident Copilot</option>
+            <option value="agent_copilot">🤖 AI Agent: Autonomous Research with Citations</option>
+            <option value="b2b_saas_rbac">🏢 B2B SaaS: Workspace & RBAC Governance</option>
+            <option value="freshworks_triage">🎧 Support Ops: Ticket Triage & SLA Escalation</option>
+          </select>
+
+          <span class="header-control-label" style="margin-left:6px;">Engine:</span>
+          <!-- Active AI Engine Indicator & Modal Trigger -->
+          <button id="aiSettingsBtn" class="btn btn-secondary btn-sm" title="Configure AI Provider & API Key">
+            <span id="aiEngineIcon">⚡</span>
+            <span id="aiEngineLabel">Built-in</span>
+            <span style="font-size:10px; margin-left:2px; opacity:0.6;">▼</span>
+          </button>
+
+          <button id="studioThemeToggleBtn" class="btn btn-icon btn-sm" title="Toggle Light/Dark Theme">
+            <span class="themeIcon">🌙</span>
+          </button>
+
+          <div class="user-avatar-circle" title="PM Workspace: Ram Chandar Sanaboyina">
+            <span>👤</span>
+          </div>
+
+          <button id="resetBtn" class="btn btn-outline btn-sm" title="Start with a fresh blank canvas" style="display:none;">Reset</button>
+        </div>
+      </header>
+
+      <!-- Split Screen Workspace -->
+      <main class="app-workspace" id="studioWorkspace">
+        <!-- Left Panel: Context, Q&A, Grounding -->
+        <aside class="left-panel">
+          <div class="panel-header-tabs">
+            <button class="panel-tab active" data-tab="setup">
+              <span class="step-num-pill solid">1</span>
+              <span>Project Setup</span>
+            </button>
+            <button class="panel-tab" data-tab="qa">
+              <span class="step-num-pill outline">2</span>
+              <span>Domain Q&A</span>
+            </button>
+            <button class="panel-tab" data-tab="grounding">
+              <span class="step-num-pill outline">3</span>
+              <span>Grounding Engine</span>
+            </button>
+          </div>
 
         <!-- Tab 1: Setup -->
         <div id="tabContentSetup" class="panel-content">
           <div class="form-group">
-            <label class="form-label" for="businessUnit">Business Unit / Industry Domain</label>
-            <input type="text" id="businessUnit" class="form-input" placeholder="e.g. Fintech & Payments, HealthTech, E-Commerce, DevTools..." />
+            <label class="form-label" for="businessUnit">
+              <span class="form-label-icon">🏢</span> Business Unit / Industry Domain
+            </label>
+            <input type="text" id="businessUnit" class="form-input" placeholder="e.g., Fintech & Payments, HealthTech, E-commerce, DevTools..." />
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="featureName">Feature Name / Strategic Initiative</label>
-            <input type="text" id="featureName" class="form-input" placeholder="e.g. Real-Time Fraud Shield, 1-Click Express Checkout..." />
+            <label class="form-label" for="featureName">
+              <span class="form-label-icon">🥞</span> Feature Name / Strategic Initiative
+            </label>
+            <input type="text" id="featureName" class="form-input" placeholder="e.g., Real-Time Fraud Shield, 1-Click Express Checkout..." />
             
             <!-- Quick Inspiration Pills -->
             <div class="quick-archetype-pills">
               <span style="font-size:11px; font-weight:600; color:var(--color-muted); align-self:center;">Quick Load:</span>
-              <button type="button" class="quick-idea-pill" data-tpl="fintech_fraud">💳 Fraud Shield</button>
-              <button type="button" class="quick-idea-pill" data-tpl="health_scribe">🏥 Clinical Scribe</button>
+              <button type="button" class="quick-idea-pill" data-tpl="fintech_fraud">⚡ Fraud Shield</button>
+              <button type="button" class="quick-idea-pill" data-tpl="health_scribe">🩺 Clinical Scribe</button>
               <button type="button" class="quick-idea-pill" data-tpl="ecommerce_checkout">🛒 1-Click Checkout</button>
-              <button type="button" class="quick-idea-pill" data-tpl="devtools_apm">🛠️ Tracing APM</button>
+              <button type="button" class="quick-idea-pill" data-tpl="devtools_apm">📈 Tracing APM</button>
               <button type="button" class="quick-idea-pill" data-tpl="agent_copilot">🤖 AI Agent</button>
               <button type="button" class="quick-idea-pill" data-tpl="b2b_saas_rbac">🏢 B2B RBAC</button>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="epicId">Epic ID / Tracking Reference</label>
-            <input type="text" id="epicId" class="form-input" placeholder="e.g. EPIC-PRD-8920" />
+            <label class="form-label" for="epicId">
+              <span class="form-label-icon">🏷️</span> Epic ID / Tracking Reference
+            </label>
+            <input type="text" id="epicId" class="form-input" placeholder="e.g., EPIC-PRD-8920" />
           </div>
 
           <div class="form-group">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label class="form-label" style="margin-bottom:0;">Target Personas</label>
+              <label class="form-label" style="margin-bottom:0;">
+                <span class="form-label-icon">👥</span> Target Personas
+              </label>
               <span style="font-size:11px; color:var(--color-muted);">Click to toggle</span>
             </div>
             <div id="personaChipsContainer" class="persona-chips">
-              <span class="persona-chip selected" data-persona="Product Manager">Product Manager</span>
-              <span class="persona-chip selected" data-persona="Engineering Lead">Engineering Lead</span>
-              <span class="persona-chip selected" data-persona="End User">End User</span>
-              <span class="persona-chip selected" data-persona="Executive CPO">Executive CPO</span>
-              <span class="persona-chip" data-persona="Operations Specialist">Operations Specialist</span>
-              <span class="persona-chip" data-persona="Security & Compliance Lead">Security Lead</span>
-              <span class="persona-chip" data-persona="Data Analyst">Data Analyst</span>
-              <span class="persona-chip" data-persona="Finance Controller">Finance Controller</span>
+              <span class="persona-chip selected" data-persona="Product Manager">✓ Product Manager</span>
+              <span class="persona-chip selected" data-persona="Engineering Lead">✓ Engineering Lead</span>
+              <span class="persona-chip selected" data-persona="End User">✓ End User</span>
+              <span class="persona-chip" data-persona="Executive CPO">✓ Executive CPO</span>
+              <span class="persona-chip" data-persona="Operations Specialist">✓ Operations Specialist</span>
+              <span class="persona-chip" data-persona="Security & Compliance Lead">✓ Security Lead</span>
+              <span class="persona-chip" data-persona="Data Analyst">✓ Data Analyst</span>
+              <span class="persona-chip" data-persona="Finance Controller">✓ Finance Controller</span>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="problemStatement">Problem Statement, Friction & Why Now?</label>
+            <label class="form-label" for="problemStatement">
+              <span class="form-label-icon">📄</span> Problem Statement, Friction & Why Now?
+            </label>
             <textarea id="problemStatement" class="form-textarea" placeholder="Detail the core customer struggle, economic impact, current baseline metric, and what happens if we do nothing..."></textarea>
           </div>
         </div>
@@ -220,20 +314,27 @@
       <!-- Right Panel: Output Tabs (PRD, CPO Audit, Wireframes, Telemetry, Playground) -->
       <section class="right-panel">
         <nav class="preview-nav">
+          <div class="preview-actions-left">
+            <button id="syncNotionBtn" class="btn btn-outline btn-sm" title="1-Click Copy Notion-Optimized Blocks">
+              <span class="nav-btn-icon">📑</span> Notion Sync
+            </button>
+            <button id="syncJiraBtn" class="btn btn-outline btn-sm" title="1-Click Export Atlassian Jira Markup">
+              <span class="nav-btn-icon jira-icon">◆</span> Jira Sync
+            </button>
+            <button id="editToggleBtn" class="btn btn-outline btn-sm">&lt;/&gt; Edit Raw MD</button>
+          </div>
+
           <div class="preview-tabs">
             <button class="preview-tab active" data-tab="prd">📄 12-Phase PRD</button>
-            <button class="preview-tab" data-tab="audit">🛡️ CPO Strategic Audit</button>
-            <button class="preview-tab" data-tab="wireframe">🎨 Visual Prototype & Specs</button>
-            <button class="preview-tab" data-tab="telemetry">📊 Grounding Telemetry & SQL</button>
-            <button class="preview-tab" data-tab="playground">⚡ AI Playground</button>
+            <button class="preview-tab" data-tab="audit">🛡️ CPO Audit</button>
+            <button class="preview-tab" data-tab="wireframe">🎨 Prototype</button>
+            <button class="preview-tab" data-tab="telemetry">📊 Telemetry</button>
+            <button class="preview-tab" data-tab="playground">⚡ Playground</button>
           </div>
 
           <div class="preview-actions">
-            <button id="syncNotionBtn" class="btn btn-secondary btn-sm" title="1-Click Copy Notion-Optimized Blocks">📑 Notion Sync</button>
-            <button id="syncJiraBtn" class="btn btn-secondary btn-sm" title="1-Click Export Atlassian Jira Markup">🔷 Jira Sync</button>
-            <button id="editToggleBtn" class="btn btn-outline btn-sm">Edit Raw MD</button>
             <button id="copyPrdBtn" class="btn btn-secondary btn-sm">Copy MD</button>
-            <button id="downloadPrdBtn" class="btn btn-primary btn-sm">Download .md</button>
+            <button id="downloadPrdBtn" class="btn btn-primary btn-sm">Download</button>
           </div>
         </nav>
 
@@ -252,31 +353,71 @@
 
         <!-- View: 12-Phase PRD -->
         <div id="viewPRD" class="preview-content">
-          <!-- Elegant Studio Ready Empty State -->
-          <div id="prdEmptyState" class="empty-state-card">
-            <div class="empty-state-icon">🚀</div>
-            <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to THE PRD BOT Studio</h2>
-            <p style="font-size:13.5px; color:var(--color-body); max-width:540px; margin:0 auto 24px; line-height:1.6;">
-              Your clean canvas is ready. Draft an executive-ready, 12-phase PRD backed by real SQL telemetry, Gherkin acceptance criteria, and interactive prototypes.
-            </p>
-
-            <div class="empty-state-grid">
-              <div class="empty-action-box" id="emptyActionDraft">
-                <div style="font-size:24px; margin-bottom:6px;">✍️</div>
-                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">1. Start from Your Idea</div>
-                <div style="font-size:12px; color:var(--color-muted);">Fill in your feature idea on the left and click "Draft 12-Phase PRD".</div>
+          <!-- Replicated Welcome Canvas from Screenshot -->
+          <div id="prdEmptyState" class="studio-welcome-canvas">
+            <div class="welcome-top-row">
+              <div class="welcome-copy-box">
+                <div class="welcome-accent-bar"></div>
+                <h2 class="welcome-title">
+                  Welcome to<br />
+                  <span>THE PRD BOT Studio</span>
+                </h2>
+                <p class="welcome-subtitle">
+                  Your clean canvas is ready. Draft an executive-ready, 12-phase PRD backed by real SQL telemetry, Gherkin acceptance criteria, and interactive prototypes.
+                </p>
               </div>
 
-              <div class="empty-action-box" id="emptyActionArchetype">
-                <div style="font-size:24px; margin-bottom:6px;">💡</div>
-                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">2. Load an Archetype</div>
-                <div style="font-size:12px; color:var(--color-muted);">Explore pre-built patterns for Fintech, HealthTech, E-Commerce, or AI Agents.</div>
+              <div class="welcome-illustration-box">
+                <svg width="180" height="145" viewBox="0 0 200 160" fill="none" class="welcome-svg-art">
+                  <!-- Base Document -->
+                  <path d="M40 20H150L180 50V140C180 145.523 175.523 150 170 150H40C34.4772 150 30 145.523 30 140V30C30 24.4772 34.4772 20 40 20Z" fill="var(--color-surface-card)" stroke="var(--color-hairline-strong)" stroke-width="2.5" />
+                  <!-- Folded Flap -->
+                  <path d="M150 20V45C150 47.7614 152.239 50 155 50H180" stroke="var(--color-hairline-strong)" stroke-width="2.5" fill="var(--color-canvas-soft)" />
+                  <!-- Document Header -->
+                  <text x="50" y="44" font-family="var(--font-sans)" font-size="14" font-weight="800" fill="var(--color-ink)">PRD</text>
+                  <!-- Text Skeleton Lines -->
+                  <rect x="50" y="56" width="60" height="3" rx="1.5" fill="var(--color-hairline-strong)" opacity="0.6" />
+                  <rect x="50" y="65" width="85" height="3" rx="1.5" fill="var(--color-hairline-strong)" opacity="0.6" />
+                  <rect x="50" y="74" width="70" height="3" rx="1.5" fill="var(--color-hairline-strong)" opacity="0.6" />
+                  <!-- Picture Card Thumbnail -->
+                  <rect x="50" y="88" width="105" height="42" rx="4" stroke="var(--color-hairline-strong)" stroke-width="2" fill="var(--color-canvas-soft)" />
+                  <polygon points="56,124 74,102 90,118 106,96 142,124" fill="var(--color-hairline)" opacity="0.8" />
+                  <!-- Floating Sparkle Accents -->
+                  <path d="M176 14L180 8M186 16L192 14M184 24L190 28" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3 Stacked Step Cards (Matching Screenshot) -->
+            <div class="welcome-steps-stack">
+              <div class="welcome-step-card" id="emptyActionDraft">
+                <div class="step-card-icon-box">
+                  <span class="step-card-emoji">💡</span>
+                </div>
+                <div class="step-card-info">
+                  <div class="step-card-title">1. Start from Your Idea</div>
+                  <div class="step-card-desc">Fill in your project details and draft a 12-Phase PRD.</div>
+                </div>
               </div>
 
-              <div class="empty-action-box" id="emptyActionPlayground">
-                <div style="font-size:24px; margin-bottom:6px;">⚡</div>
-                <div style="font-weight:700; font-size:14px; margin-bottom:4px;">3. Open AI Playground</div>
-                <div style="font-size:12px; color:var(--color-muted);">Test frontier models (Gemini, Claude, GPT-4o) with Amazon 6-Pager & Stripe styles.</div>
+              <div class="welcome-step-card" id="emptyActionArchetype">
+                <div class="step-card-icon-box">
+                  <span class="step-card-emoji">📚</span>
+                </div>
+                <div class="step-card-info">
+                  <div class="step-card-title">2. Answer a Few Questions</div>
+                  <div class="step-card-desc">Add context, constraints, and key requirements.</div>
+                </div>
+              </div>
+
+              <div class="welcome-step-card" id="emptyActionPlayground">
+                <div class="step-card-icon-box">
+                  <span class="step-card-emoji">⚙️</span>
+                </div>
+                <div class="step-card-info">
+                  <div class="step-card-title">3. Generate & Refine</div>
+                  <div class="step-card-desc">Get a structured PRD and iterate with AI.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -373,6 +514,16 @@
             </div>
           </div>
         </div>
+
+        <!-- Right Panel Bottom Action Bar (Screenshot Match) -->
+        <div class="right-panel-footer">
+          <button id="saveDraftBtn" class="btn btn-outline btn-sm">
+            <span>💾</span> Save Draft
+          </button>
+          <button id="studioGeneratePrdBtn" class="btn btn-primary btn-sm" style="font-weight:600;">
+            <span>✨</span> Generate PRD →
+          </button>
+        </div>
       </section>
     </main>
 
@@ -384,7 +535,8 @@
         FIRST-PRINCIPLES PRODUCT LIFECYCLE ENGINE
       </div>
     </footer>
-  </div>
+    </div> <!-- .studio-main-body -->
+  </div> <!-- #viewStudio.studio-app-layout -->
 
   <!-- AI Settings Modal -->
   <div id="aiModal" class="modal-backdrop" style="display:none;">

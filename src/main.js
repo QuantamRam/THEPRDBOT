@@ -300,8 +300,91 @@ function setupEventListeners() {
     currentPRDMarkdown = e.target.value;
   });
 
-  // Generate Button
+  // Generate Buttons (Both Wizard Execution Bar and Right Panel Footer)
   generateBtn.addEventListener('click', runPRDGenerationPipeline);
+
+  const studioGeneratePrdBtn = document.getElementById('studioGeneratePrdBtn');
+  if (studioGeneratePrdBtn) {
+    studioGeneratePrdBtn.addEventListener('click', runPRDGenerationPipeline);
+  }
+
+  // Sidebar & Studio Action Controls (Screenshot Match)
+  const sidebarNewPrdBtn = document.getElementById('sidebarNewPrdBtn');
+  if (sidebarNewPrdBtn) {
+    sidebarNewPrdBtn.addEventListener('click', () => {
+      resetBtn.click();
+      featureNameInput.focus();
+      showToast('✨ Started clean PRD canvas.');
+    });
+  }
+
+  const navItemOverview = document.getElementById('navItemOverview');
+  if (navItemOverview) {
+    navItemOverview.addEventListener('click', () => {
+      backToHomeBtn.click();
+    });
+  }
+
+  const navItemProjects = document.getElementById('navItemProjects');
+  if (navItemProjects) {
+    navItemProjects.addEventListener('click', () => {
+      const saved = localStorage.getItem('theprdbot_saved_draft');
+      if (saved) {
+        showToast('📂 Auto-saved PRD found and ready in Studio.');
+      } else {
+        showToast('📂 1 active project: Current PRD canvas.');
+      }
+    });
+  }
+
+  const navItemTemplates = document.getElementById('navItemTemplates');
+  if (navItemTemplates) {
+    navItemTemplates.addEventListener('click', () => {
+      templateSelect.focus();
+      showToast('💡 Choose an archetype from the top dropdown.');
+    });
+  }
+
+  const navItemIntegrations = document.getElementById('navItemIntegrations');
+  if (navItemIntegrations) {
+    navItemIntegrations.addEventListener('click', () => {
+      syncJiraBtn.click();
+    });
+  }
+
+  const navItemTeam = document.getElementById('navItemTeam');
+  if (navItemTeam) {
+    navItemTeam.addEventListener('click', () => {
+      showToast('👥 Active Workspace: Ram Chandar Sanaboyina (Owner).');
+    });
+  }
+
+  const navItemSettings = document.getElementById('navItemSettings');
+  if (navItemSettings) {
+    navItemSettings.addEventListener('click', () => {
+      aiSettingsBtn.click();
+    });
+  }
+
+  const sidebarUpgradeBtn = document.getElementById('sidebarUpgradeBtn');
+  if (sidebarUpgradeBtn) {
+    sidebarUpgradeBtn.addEventListener('click', () => {
+      showToast('🚀 Pro Tier: Unlimited PRDs, 2M Context, Jira/Notion Auto-Sync.');
+    });
+  }
+
+  const saveDraftBtn = document.getElementById('saveDraftBtn');
+  if (saveDraftBtn) {
+    saveDraftBtn.addEventListener('click', () => {
+      updateInputsFromDOM();
+      localStorage.setItem('theprdbot_saved_draft', JSON.stringify({
+        inputs: currentInputs,
+        markdown: currentPRDMarkdown,
+        savedAt: new Date().toISOString()
+      }));
+      showToast('💾 Draft successfully saved to local storage!');
+    });
+  }
 
   // Raw MD Editor Toggle
   editToggleBtn.addEventListener('click', () => {
@@ -665,6 +748,11 @@ async function runPRDGenerationPipeline() {
   }
 
   generateBtn.disabled = true;
+  const studioGenBtn = document.getElementById('studioGeneratePrdBtn');
+  if (studioGenBtn) {
+    studioGenBtn.disabled = true;
+    studioGenBtn.innerHTML = '<span>⚡</span> Generating PRD...';
+  }
 
   try {
     const prdText = await generatePRD(currentInputs, currentQAAnswers, (pill, text) => {
@@ -712,6 +800,11 @@ async function runPRDGenerationPipeline() {
     showToast(`Generation error: ${err.message}`);
   } finally {
     generateBtn.disabled = false;
+    const studioGenBtn = document.getElementById('studioGeneratePrdBtn');
+    if (studioGenBtn) {
+      studioGenBtn.disabled = false;
+      studioGenBtn.innerHTML = '<span>✨</span> Generate PRD →';
+    }
   }
 }
 

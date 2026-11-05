@@ -27,6 +27,15 @@
       <div class="freshworks-badge">
         <span>⚡ Universal PM Precision Engine</span>
       </div>
+
+      <!-- Editorial Nav Links (Matching Basis Nav) -->
+      <nav class="nav-links-bar">
+        <a href="#studioWorkspace" class="nav-link-item">Studio</a>
+        <a href="#studioWorkspace" class="nav-link-item" id="navPlaygroundLink">AI Playground</a>
+        <a href="#studioWorkspace" class="nav-link-item" id="navFrameworkLink">12-Phase Spec</a>
+        <a href="#studioWorkspace" class="nav-link-item" id="navJiraLink">Jira & Notion</a>
+        <a href="https://github.com/QuantamRam/THEPRDBOT" target="_blank" rel="noopener noreferrer" class="nav-link-item">GitHub ↗</a>
+      </nav>
     </div>
 
     <div class="header-controls">
@@ -53,11 +62,53 @@
       </button>
 
       <button id="resetBtn" class="btn btn-outline btn-sm" title="Start with a fresh blank canvas">Reset</button>
+
+      <a href="#studioWorkspace" class="btn btn-primary btn-sm" style="border-radius:var(--radius-pill); font-weight:600; padding:6px 14px; text-decoration:none;">Launch Studio →</a>
     </div>
   </header>
 
+  <!-- Hero Section (Matching Basis Editorial Aesthetic) -->
+  <section class="hero-section">
+    <div class="hero-kicker">THE PRD BOT — calm ops for product teams</div>
+    
+    <h1 class="hero-headline">
+      Less noise. More<br />
+      shipped PRDs.
+    </h1>
+
+    <p class="hero-subtitle">
+      One workspace for plans, handoffs, and automations — built for teams who care about clarity as much as velocity.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#studioWorkspace" id="heroCreatePrdBtn" class="hero-pill-cta">Create your PRD →</a>
+      <a href="#studioWorkspace" id="heroOpenPlaygroundBtn" class="hero-pill-secondary">Explore AI Playground ⚡</a>
+    </div>
+
+    <div class="hero-hairline-divider"></div>
+
+    <div class="hero-stats-row">
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">6.4k</span>
+        <span class="hero-stat-desc">Workspaces created</span>
+      </div>
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">1.2M</span>
+        <span class="hero-stat-desc">Tasks completed</span>
+      </div>
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">99.97%</span>
+        <span class="hero-stat-desc">Platform uptime</span>
+      </div>
+      <div class="hero-stat-card">
+        <span class="hero-stat-value">&lt;2min</span>
+        <span class="hero-stat-desc">Median setup time</span>
+      </div>
+    </div>
+  </section>
+
   <!-- Split Screen Workspace -->
-  <main class="app-workspace">
+  <main class="app-workspace" id="studioWorkspace">
     <!-- Left Panel: Context, Q&A, Grounding -->
     <aside class="left-panel">
       <div class="panel-header-tabs">

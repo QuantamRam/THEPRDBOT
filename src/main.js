@@ -136,6 +136,52 @@ function setupEventListeners() {
   testConnectionBtn.addEventListener('click', handleTestAIConnection);
   aiProviderSelect.addEventListener('change', updateAIModalFields);
 
+  // Hero Section & Nav Links Handlers
+  const heroCreatePrdBtn = document.getElementById('heroCreatePrdBtn');
+  const heroOpenPlaygroundBtn = document.getElementById('heroOpenPlaygroundBtn');
+  const navPlaygroundLink = document.getElementById('navPlaygroundLink');
+  const navFrameworkLink = document.getElementById('navFrameworkLink');
+  const navJiraLink = document.getElementById('navJiraLink');
+
+  if (heroCreatePrdBtn) {
+    heroCreatePrdBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => featureNameInput.focus(), 400);
+    });
+  }
+
+  if (heroOpenPlaygroundBtn) {
+    heroOpenPlaygroundBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
+      switchPreviewTab('playground');
+    });
+  }
+
+  if (navPlaygroundLink) {
+    navPlaygroundLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
+      switchPreviewTab('playground');
+    });
+  }
+
+  if (navFrameworkLink) {
+    navFrameworkLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('studioWorkspace').scrollIntoView({ behavior: 'smooth' });
+      switchPreviewTab('prd');
+    });
+  }
+
+  if (navJiraLink) {
+    navJiraLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openJiraModal();
+    });
+  }
+
   // Jira Modal
   syncJiraBtn.addEventListener('click', openJiraModal);
   closeJiraModalBtn.addEventListener('click', () => { jiraModal.style.display = 'none'; });

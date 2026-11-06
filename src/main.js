@@ -157,6 +157,20 @@ function initCleanWorkspace() {
   prdRenderedView.style.display = 'none';
   prdRawEditor.style.display = 'none';
   prdQuickJumpBar.style.display = 'none';
+
+  // Reset default persona selection
+  document.querySelectorAll('.persona-chip').forEach(c => {
+    const isDefault = ['Product Manager', 'Engineering Lead', 'End User'].includes(c.dataset.persona);
+    if (isDefault) {
+      c.classList.add('selected');
+    } else {
+      c.classList.remove('selected');
+    }
+    const circle = c.querySelector('.chip-circle');
+    if (circle) {
+      circle.innerText = isDefault ? '✓' : '○';
+    }
+  });
 }
 
 function setupEventListeners() {
@@ -281,8 +295,14 @@ function setupEventListeners() {
 
   // Persona Chips Select
   personaChipsContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('persona-chip')) {
-      e.target.classList.toggle('selected');
+    const chip = e.target.closest('.persona-chip');
+    if (chip) {
+      chip.classList.toggle('selected');
+      const isSelected = chip.classList.contains('selected');
+      const circle = chip.querySelector('.chip-circle');
+      if (circle) {
+        circle.innerText = isSelected ? '✓' : '○';
+      }
       updateInputsFromDOM();
     }
   });
@@ -306,6 +326,102 @@ function setupEventListeners() {
   const studioGeneratePrdBtn = document.getElementById('studioGeneratePrdBtn');
   if (studioGeneratePrdBtn) {
     studioGeneratePrdBtn.addEventListener('click', runPRDGenerationPipeline);
+  }
+
+  // Google Workspace Controls (Top Navbar, Search, Drive Sync, Avatars)
+  const gwHamburgerBtn = document.getElementById('gwHamburgerBtn');
+  if (gwHamburgerBtn) {
+    gwHamburgerBtn.addEventListener('click', () => {
+      navigateToLanding();
+    });
+  }
+
+  const gwStudioPill = document.getElementById('gwStudioPill');
+  if (gwStudioPill) {
+    gwStudioPill.addEventListener('click', () => {
+      showToast('📍 Active Workspace: THE PRD BOT Studio');
+    });
+  }
+
+  const gwHelpBtn = document.getElementById('gwHelpBtn');
+  if (gwHelpBtn) {
+    gwHelpBtn.addEventListener('click', () => {
+      showToast('💡 1. Enter project idea. 2. Answer domain Q&A. 3. Click Generate PRD!');
+    });
+  }
+
+  const gwConnectBtn = document.getElementById('gwConnectBtn');
+  if (gwConnectBtn) {
+    gwConnectBtn.addEventListener('click', () => {
+      showToast('🔗 Google Workspace Synced: Drive, Docs, and Calendar connected!');
+    });
+  }
+
+  const gwUserAvatar = document.getElementById('gwUserAvatar');
+  if (gwUserAvatar) {
+    gwUserAvatar.addEventListener('click', () => {
+      showToast('👤 PM Workspace: Ram Chandar Sanaboyina (Owner)');
+    });
+  }
+
+  const navItemStudio = document.getElementById('navItemStudio');
+  if (navItemStudio) {
+    navItemStudio.addEventListener('click', () => {
+      navigateToStudio('prd');
+      showToast('📍 Studio Workspace');
+    });
+  }
+
+  const syncDriveBtn = document.getElementById('syncDriveBtn');
+  if (syncDriveBtn) {
+    syncDriveBtn.addEventListener('click', () => {
+      if (!currentPRDMarkdown) {
+        showToast('Draft a PRD first before syncing to Google Drive.');
+        return;
+      }
+      copyToClipboard(currentPRDMarkdown).then(() => {
+        triggerConfetti();
+        showToast('▲ Formatted PRD copied for Google Drive!');
+      });
+    });
+  }
+
+  const syncDocsBtn = document.getElementById('syncDocsBtn');
+  if (syncDocsBtn) {
+    syncDocsBtn.addEventListener('click', () => {
+      if (!currentPRDMarkdown) {
+        showToast('Draft a PRD first before exporting to Google Docs.');
+        return;
+      }
+      copyToClipboard(currentPRDMarkdown).then(() => {
+        triggerConfetti();
+        showToast('📄 Copied Google Docs formatted markdown!');
+      });
+    });
+  }
+
+  // Ctrl + K Global Hotkey to Focus Search
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const searchInput = document.getElementById('gwSearchInput');
+      if (searchInput) {
+        searchInput.focus();
+        showToast('🔍 Search focused (Ctrl+K)');
+      }
+    }
+  });
+
+  const gwSearchInput = document.getElementById('gwSearchInput');
+  if (gwSearchInput) {
+    gwSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.toLowerCase().trim();
+        if (query) {
+          showToast(`🔍 Searching for "${query}" across projects & templates...`);
+        }
+      }
+    });
   }
 
   // Sidebar & Studio Action Controls (Screenshot Match)
@@ -627,10 +743,15 @@ function loadTemplate(templateKey, autoGenerate = false) {
   problemStatementInput.value = tpl.problemStatement;
 
   document.querySelectorAll('.persona-chip').forEach(c => {
-    if (tpl.targetPersonas.includes(c.dataset.persona)) {
+    const isSelected = tpl.targetPersonas.includes(c.dataset.persona);
+    if (isSelected) {
       c.classList.add('selected');
     } else {
       c.classList.remove('selected');
+    }
+    const circle = c.querySelector('.chip-circle');
+    if (circle) {
+      circle.innerText = isSelected ? '✓' : '○';
     }
   });
 

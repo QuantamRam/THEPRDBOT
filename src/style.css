@@ -577,24 +577,32 @@ body {
   padding: 0 20px;
   gap: 16px;
   z-index: 50;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .studio-header-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .studio-title-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .studio-brand-name {
   font-weight: 800;
   font-size: 15px;
   letter-spacing: -0.5px;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .studio-pill-badge {
@@ -605,12 +613,29 @@ body {
   padding: 2px 7px;
   border-radius: var(--radius-pill);
   letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .header-control-label {
   font-size: 12px;
   font-weight: 600;
   color: var(--color-body);
+  white-space: nowrap;
+}
+
+.template-select {
+  max-width: 300px;
+  min-width: 180px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -814,13 +839,14 @@ body {
 .app-workspace {
   flex: 1;
   display: grid;
-  grid-template-columns: 460px 1fr;
+  grid-template-columns: minmax(380px, 440px) 1fr;
   height: calc(100vh - 56px - 34px);
   overflow: hidden;
   min-height: 0;
+  width: 100%;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .app-workspace {
     grid-template-columns: 1fr;
     height: auto;
@@ -830,14 +856,20 @@ body {
 
 /* Left Panel */
 .left-panel {
+  min-width: 0;
   background-color: var(--color-canvas);
   border-right: 1px solid var(--color-hairline);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .panel-header-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   background-color: var(--color-canvas-soft);
   border-bottom: 1px solid var(--color-hairline);
@@ -845,6 +877,7 @@ body {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
+  flex-shrink: 0;
 }
 .panel-header-tabs::-webkit-scrollbar { display: none; }
 
@@ -1070,14 +1103,17 @@ body {
 
 /* Right Panel */
 .right-panel {
+  min-width: 0;
   background-color: var(--color-surface-card);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
 }
 
 .preview-nav {
   height: 48px;
+  min-height: 48px;
   background-color: var(--color-canvas-soft);
   border-bottom: 1px solid var(--color-hairline);
   display: flex;
@@ -1085,7 +1121,11 @@ body {
   justify-content: space-between;
   padding: 0 16px;
   gap: 12px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.preview-nav::-webkit-scrollbar { display: none; }
 
 .preview-tabs {
   display: flex;
@@ -1179,9 +1219,11 @@ body {
 .preview-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px;
+  overflow-x: hidden;
+  padding: 24px 32px;
   background-color: var(--color-surface-card);
   scroll-behavior: smooth;
+  min-width: 0;
 }
 
 /* Markdown Document Styling */
@@ -1189,7 +1231,7 @@ body {
   scroll-behavior: smooth;
 }
 
-body {
+.markdown-body {
   max-width: 860px;
   margin: 0 auto;
   font-size: 14.5px;
@@ -1468,7 +1510,7 @@ body {
   scroll-behavior: smooth;
 }
 
-body {
+.modal-body {
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -1513,12 +1555,13 @@ body {
 
 /* Studio Welcome Canvas (Screenshot Match) */
 .studio-welcome-canvas {
-  max-width: 760px;
+  max-width: 820px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  padding: 18px 0 36px;
+  padding: 10px 0 36px;
 }
 
 .welcome-top-row {
@@ -1526,10 +1569,12 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .welcome-copy-box {
   flex: 1;
+  min-width: 280px;
 }
 
 .welcome-accent-bar {
@@ -1541,9 +1586,9 @@ body {
 }
 
 .welcome-title {
-  font-size: 26px;
+  font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--color-ink);
   letter-spacing: -0.025em;
   margin-bottom: 12px;

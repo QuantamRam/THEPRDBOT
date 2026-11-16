@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "graphify": "python -m graphify update .",
+    "graphify:query": "python -m graphify query",
+    "graphify:explain": "python -m graphify explain",
+    "graphify:path": "python -m graphify path",
+    "graphify:wiki": "python -m graphify export wiki",
+    "graphify:callflow": "python -m graphify export callflow-html"
   },
   "devDependencies": {
     "vite": "^5.4.2"

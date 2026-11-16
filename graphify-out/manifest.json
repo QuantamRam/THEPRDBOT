@@ -1,0 +1,146 @@
+{
+  "package.json": {
+    "mtime": 1794798700.208213,
+    "seen": 1794798834.5355573,
+    "ast_hash": "54c088abe150089449a2d8370a66c5ff",
+    "semantic_hash": ""
+  },
+  "src/data/templates.js": {
+    "mtime": 1793848814.942801,
+    "seen": 1794798566.1215572,
+    "ast_hash": "47feb34166883bdbc55e7bb1e880540c",
+    "semantic_hash": ""
+  },
+  "src/engine/aiService.js": {
+    "mtime": 1793848811.3299243,
+    "seen": 1794798566.1215572,
+    "ast_hash": "8c20b3961f45223050ac46769b053b15",
+    "semantic_hash": ""
+  },
+  "src/engine/cpoAuditEngine.js": {
+    "mtime": 1793848815.162482,
+    "seen": 1794798566.1215572,
+    "ast_hash": "664512c30474316748374efe7968fe6c",
+    "semantic_hash": ""
+  },
+  "src/engine/domainDetector.js": {
+    "mtime": 1793848811.5321813,
+    "seen": 1794798566.1215572,
+    "ast_hash": "3b552cf688d84898749e4d7b982a3b09",
+    "semantic_hash": ""
+  },
+  "src/engine/playgroundEngine.js": {
+    "mtime": 1793850626.742195,
+    "seen": 1794798566.1215572,
+    "ast_hash": "3bf9287d2103fd5cd9bb6083ea6420d6",
+    "semantic_hash": ""
+  },
+  "src/engine/prdGenerator.js": {
+    "mtime": 1793848815.393425,
+    "seen": 1794798566.1215572,
+    "ast_hash": "3517b6de6486cc7531bcd94bcd556922",
+    "semantic_hash": ""
+  },
+  "src/engine/qaGenerator.js": {
+    "mtime": 1793848815.5260386,
+    "seen": 1794798566.1215572,
+    "ast_hash": "df1efaadd55ebb79d90e7f5bcbb0826a",
+    "semantic_hash": ""
+  },
+  "src/engine/telemetryEngine.js": {
+    "mtime": 1793848815.6932466,
+    "seen": 1794798566.1215572,
+    "ast_hash": "968a4344bcc95928028b17625dcb88f1",
+    "semantic_hash": ""
+  },
+  "src/engine/wireframeEngine.js": {
+    "mtime": 1793848828.7172365,
+    "seen": 1794798566.1215572,
+    "ast_hash": "a406a192eec37c1da3fe7e9ab9bb87d6",
+    "semantic_hash": ""
+  },
+  "src/main.js": {
+    "mtime": 1793977655.0150418,
+    "seen": 1794798566.1215572,
+    "ast_hash": "46d1b0b6c214367e8069129f4fc35e67",
+    "semantic_hash": ""
+  },
+  "src/utils/exportUtils.js": {
+    "mtime": 1791179276.9474318,
+    "seen": 1794798566.1215572,
+    "ast_hash": "e3a2a898d9f11eab22886f509c80fe44",
+    "semantic_hash": ""
+  },
+  "src/utils/jiraNotionExporter.js": {
+    "mtime": 1793850628.6685698,
+    "seen": 1794798566.1215572,
+    "ast_hash": "aee5b673e49e04730891510dcb72b49a",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1794798747.8505962,
+    "seen": 1794798834.5355573,
+    "ast_hash": "0d3ddd36b51d10756aa1a954bcc44dde",
+    "semantic_hash": ""
+  },
+  "REVIEW_LOG.md": {
+    "mtime": 1793850587.8258312,
+    "seen": 1794798566.1215572,
+    "ast_hash": "33f76bcd139f9dfaff4fa814689d8aaf",
+    "semantic_hash": ""
+  },
+  "SKILL (27).md": {
+    "mtime": 1791193691.0970094,
+    "seen": 1794798566.1215572,
+    "ast_hash": "2ac1ba6ea057314887bbe68309c60cb9",
+    "semantic_hash": ""
+  },
+  "cursor.design.md": {
+    "mtime": 1791178740.2429178,
+    "seen": 1794798566.1215572,
+    "ast_hash": "16ddbed6384ee987082a74669a7b109a",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1793977450.288677,
+    "seen": 1794798566.1215572,
+    "ast_hash": "2f50d234f28fc1c8f85d66f69612c34d",
+    "semantic_hash": ""
+  },
+  "public/hero_animation.mp4": {
+    "mtime": 1793852617.558388,
+    "seen": 1794798566.1215572,
+    "ast_hash": "7ba42abb93ce3d750f297ce6d3fab669",
+    "semantic_hash": ""
+  },
+  ".codex/hooks.json": {
+    "mtime": 1794798621.4907997,
+    "seen": 1794798834.5355573,
+    "ast_hash": "e36447cbee0b750abc99bdba64155612",
+    "semantic_hash": ""
+  },
+  ".gemini/settings.json": {
+    "mtime": 1794798614.3685954,
+    "seen": 1794798834.5355573,
+    "ast_hash": "fe6e0920dda63f9a62a72b5f5b6e0bbe",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1794798621.4838688,
+    "seen": 1794798834.5355573,
+    "ast_hash": "9c9200425215c39e62e5f02c4a881233",
+    "semantic_hash": ""
+  },
+  "GEMINI.md": {
+    "mtime": 1794798614.3544047,
+    "seen": 1794798834.5355573,
+    "ast_hash": "dfe5fa7939121e96d61b54077cc9ab84",
+    "semantic_hash": ""
+  },
+  "package-lock.json": {
+    "mtime": 1791179127.0798218,
+    "seen": 1794798566.1215572,
+    "ast_hash": "fe446a711432fec4b0b945a33a120a52",
+    "semantic_hash": ""
+  }
+}

@@ -217,6 +217,32 @@ THEPRDBOT/
 
 ---
 
+---
+
+## 🕸️ Code Knowledge Graph & AI-Assisted Development (Graphify)
+
+THE PRD BOT embeds **[Graphify](https://github.com/Graphify-Labs/graphify)** (`tools/graphify/`) to map this entire codebase into a deterministic, queryable knowledge graph:
+
+- **Local AST Parsing:** 200+ nodes and 300+ edges parsed locally using tree-sitter AST (0 LLM credits required).
+- **Interactive Visual Code Graph:** Open `graphify-out/graph.html` or `graphify-out/THEPRDBOT-callflow.html` to explore callers, dependencies, and flow diagrams interactively.
+- **AI Agent Navigation:** AI agents (Antigravity, Gemini CLI, Claude Code, Cursor, Codex) consult `graphify-out/graph.json` and `graphify-out/wiki/index.md` before reading raw files.
+
+### Running Graphify
+```bash
+# Rebuild the knowledge graph after code changes
+npm run graphify
+
+# Query the codebase knowledge graph
+npm run graphify:explain "runPRDGenerationPipeline"
+npm run graphify:path "templateSelect" "generateFullPRD"
+
+# Export wiki & call-flow diagrams
+npm run graphify:wiki
+npm run graphify:callflow
+```
+
+---
+
 ## 👤 Author & Engineering Leadership
 
 Crafted with first-principles precision by **Ram Chandar Sanaboyina**.

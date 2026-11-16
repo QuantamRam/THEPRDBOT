@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THEPRDBOT — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>THEPRDBOT — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 215 nodes, 341 edges, 13 communities. Commit: d6d83e3</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#engine-prdgeneratorjs-cpoauditenginejs">Engine Prdgeneratorjs Cpoauditenginejs</a>
+    <a href="#review-logmd-pass">Review Logmd Pass</a>
+    <a href="#cursordesignmd-known-gaps">Cursordesignmd Known Gaps</a>
+    <a href="#templatesjs-data-templates">Templatesjs Data Templates</a>
+    <a href="#agentsmd-graphify">Agentsmd Graphify</a>
+    <a href="#geminimd-graphify">Geminimd Graphify</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>50 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>130 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    ENGINE_PRDGENERATORJS_CPOAUDITENGINEJS_498D4B0E("Engine Prdgeneratorjs Cpoauditenginejs<br/><small>14 nodes</small>")
+    class ENGINE_PRDGENERATORJS_CPOAUDITENGINEJS_498D4B0E module;
+    REVIEW_LOGMD_PASS_CE2F970E("Review Logmd Pass<br/><small>12 nodes</small>")
+    class REVIEW_LOGMD_PASS_CE2F970E module;
+    CURSORDESIGNMD_KNOWN_GAPS_7433347D("Cursordesignmd Known Gaps<br/><small>3 nodes</small>")
+    class CURSORDESIGNMD_KNOWN_GAPS_7433347D module;
+    TEMPLATESJS_DATA_TEMPLATES_CFE8C0BC("Templatesjs Data Templates<br/><small>2 nodes</small>")
+    class TEMPLATESJS_DATA_TEMPLATES_CFE8C0BC module;
+    AGENTSMD_GRAPHIFY_127948D2("Agentsmd Graphify<br/><small>2 nodes</small>")
+    class AGENTSMD_GRAPHIFY_127948D2 module;
+    GEMINIMD_GRAPHIFY_82654AD0("Geminimd Graphify<br/><small>2 nodes</small>")
+    class GEMINIMD_GRAPHIFY_82654AD0 module;
+    CLI_SKILLS_9964CBB8 -->|calls x22| ENGINE_PRDGENERATORJS_CPOAUDITENGINEJS_498D4B0E
+    CLI_SKILLS_9964CBB8 -->|imports x5| BUILD_GRAPH_321CBB04
+    BUILD_GRAPH_321CBB04 -->|contains x4| CLI_SKILLS_9964CBB8
+    CLI_SKILLS_9964CBB8 -->|imports x2| TEMPLATESJS_DATA_TEMPLATES_CFE8C0BC
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>50</td><td><code>2, 4, 9</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>130</td><td><code>0, 1, 3, 7</code></td></tr><tr><td>Engine Prdgeneratorjs Cpoauditenginejs</td><td>14</td><td><code>5</code></td></tr><tr><td>Review Logmd Pass</td><td>12</td><td><code>6</code></td></tr><tr><td>Cursordesignmd Known Gaps</td><td>3</td><td><code>8</code></td></tr><tr><td>Templatesjs Data Templates</td><td>2</td><td><code>10</code></td></tr><tr><td>Agentsmd Graphify</td><td>2</td><td><code>11</code></td></tr><tr><td>Geminimd Graphify</td><td>2</td><td><code>12</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Review Logmd Pass -&gt; Graph Build -&gt; CLI &amp; Skill Installers -&gt; Engine Prdgeneratorjs Cpoauditenginejs -&gt; Cursordesignmd Known Gaps -&gt; Templatesjs Data Templates -&gt; Agentsmd Graphify</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>215 nodes · 341 edges · 13 communities (9 shown, 4 thin omitted)</li>
+      <li>Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 13 edges (avg confidence: 0.85)</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `setupEventListeners()` - 25 edges</li>
+      <li>2. `runPRDGenerationPipeline()` - 14 edges</li>
+      <li>3. `detectDomain()` - 13 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around packagejson, readmemd, engine, prd, mostly in package.json, README.md, src/utils/exportUtils.js. This section covers 50 nodes and 52 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (50 nodes, 52 edges)
+    subgraph build_graph_package_json_4e40bfbd["package.json"]
+        package_582681c2("package.json")
+        ref_vite_c95c70db("vite<br/><small>package.json</small>")
+        ref_marked_89345688("marked<br/><small>package.json</small>")
+        ref_canvas_confetti_a5ffa245("canvas-confetti<br/><small>package.json</small>")
+        ref_lucide_ba2affd4("lucide<br/><small>package.json</small>")
+        package_scripts_build_b63da213("build<br/><small>package.json</small>")
+        package_dependencies_canvas_confetti_6786c35d("canvas-confetti@^1.9.3<br/><small>package.json</small>")
+        package_dependencies_c512ca5e("dependencies<br/><small>package.json</small>")
+        package_scripts_dev_8c0c97d3("dev<br/><small>package.json</small>")
+        package_devdependencies_ff8711cc("devDependencies<br/><small>package.json</small>")
+        package_scripts_graphify_7906215a("graphify<br/><small>package.json</small>")
+        package_scripts_graphify_callflow_11faaed4("graphify:callflow<br/><small>package.json</small>")
+        package_scripts_graphify_explain_05d4b03d("graphify:explain<br/><small>package.json</small>")
+        package_scripts_graphify_path_0171919d("graphify:path<br/><small>package.json</small>")
+        package_scripts_graphify_query_9318f296("graphify:query<br/><small>package.json</small>")
+    end
+    subgraph build_graph_src_utils_exportUtils_js_25c7bb9e["src/utils/exportUtils.js"]
+        src_utils_exportutils_7443c3fb("exportUtils.js")
+        src_utils_exportutils_downloadjson_c576526d("downloadJson()<br/><small>src/utils/exportUtils.js</small>")
+    end
+    src_main_renderwireframeview_23a2f717("renderWireframeView()<br/><small>src/main.js</small>")
+    src_main_renderwireframeview_23a2f717 -->|calls| src_utils_exportutils_downloadjson_c576526d
+    package_582681c2 -->|imports| ref_vite_c95c70db
+    package_582681c2 -->|imports| ref_marked_89345688
+    package_582681c2 -->|imports| ref_canvas_confetti_a5ffa245
+    package_582681c2 -->|imports| ref_lucide_ba2affd4
+    src_utils_exportutils_7443c3fb -->|imports| ref_canvas_confetti_a5ffa245
+    %% Omitted for readability: 32 nodes, 0 edges
+    class package_582681c2 function;
+    class ref_vite_c95c70db function;
+    class ref_marked_89345688 function;
+    class ref_canvas_confetti_a5ffa245 function;
+    class ref_lucide_ba2affd4 function;
+    class package_scripts_build_b63da213 function;
+    class package_dependencies_canvas_confetti_6786c35d function;
+    class package_dependencies_c512ca5e function;
+    class package_scripts_dev_8c0c97d3 function;
+    class package_devdependencies_ff8711cc function;
+    class package_scripts_graphify_7906215a function;
+    class package_scripts_graphify_callflow_11faaed4 function;
+    class package_scripts_graphify_explain_05d4b03d function;
+    class package_scripts_graphify_path_0171919d function;
+    class package_scripts_graphify_query_9318f296 function;
+    class src_utils_exportutils_7443c3fb module;
+    class src_utils_exportutils_downloadjson_c576526d function;
+    class src_main_renderwireframeview_23a2f717 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>README.md</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing README.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>1. 🧠 Dual-Engine AI Architecture (BYOK + Offline Precision)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 1. 🧠 Dual-Engine AI Architecture (BYOK + Offline Precision).</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>2. 🏛️ The 12-Phase First-Principles PRD Framework</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 2. 🏛️ The 12-Phase First-Principles PRD Framework.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>3. 🧪 Multi-Model &amp; Multi-Framework AI Playground</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 3. 🧪 Multi-Model &amp; Multi-Framework AI Playground.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>4. 🛡️ CPO Strategic Executive Audit Engine</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 4. 🛡️ CPO Strategic Executive Audit Engine.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>5. 🎨 Interactive Visual Prototyping &amp; Figma Schema</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 5. 🎨 Interactive Visual Prototyping &amp; Figma Schema.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>👤 Author &amp; Engineering Leadership</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 👤 Author &amp; Engineering Leadership.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Building for Production</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Building for Production.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>🕸️ Code Knowledge Graph &amp; AI-Assisted Development (Graphify)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🕸️ Code Knowledge Graph &amp; AI-Assisted Development (Graphify).</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>📊 Comparison Matrix</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 📊 Comparison Matrix.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>🎨 Design Philosophy: Cursor Design System</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🎨 Design Philosophy: Cursor Design System.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>⚡ Key Architectural Highlights</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing ⚡ Key Architectural Highlights.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>📄 License</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 📄 License.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Prerequisites</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Prerequisites.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>📂 Project Structure</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 📂 Project Structure.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>🚀 Quickstart &amp; Installation</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🚀 Quickstart &amp; Installation.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Running Graphify</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Running Graphify.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Setup in 30 Seconds</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Setup in 30 Seconds.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>🏗️ System Architecture &amp; Execution Pipeline</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🏗️ System Architecture &amp; Execution Pipeline.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>The AI-Native Product Lifecycle Engine for Elite Product Managers</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing The AI-Native Product Lifecycle Engine for Elite Product Managers.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>🚀 THE PRD BOT</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🚀 THE PRD BOT.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>💡 The Problem: Why 90% of AI PRD Tools Fail</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 💡 The Problem: Why 90% of AI PRD Tools Fail.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>renderWireframeView()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>runPRDGenerationPipeline()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>downloadJson()</code><br><small style="color:var(--muted)">src/utils/exportUtils.js</small><br><code>triggerConfetti()</code><br><small style="color:var(--muted)">src/utils/exportUtils.js</small></td>
+  <td>renderWireframeView() node in src/main.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>downloadJson()</code><br><small style="color:var(--muted)">src/utils/exportUtils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>renderWireframeView()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>downloadJson() node in src/utils/exportUtils.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>canvas-confetti</code><br><small style="color:var(--muted)">package.json</small><br><code>lucide</code><br><small style="color:var(--muted)">package.json</small><br><code>marked</code><br><small style="color:var(--muted)">package.json</small><br>+1 more</td>
+  <td>package.json node in package.json.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>dependencies</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dependencies node in package.json.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>canvas-confetti@^1.9.3</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>canvas-confetti@^1.9.3 node in package.json.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>lucide@^0.439.0</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lucide@^0.439.0 node in package.json.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>marked@^14.1.0</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>marked@^14.1.0 node in package.json.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>devDependencies</code><br><small style="color:var(--muted)">package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>devDependencies node in package.json.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>package.json</code></td><td>25 nodes</td></tr>
+<tr><td><code>README.md</code></td><td>22 nodes</td></tr>
+<tr><td><code>src/utils/exportUtils.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/main.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x42, imports x4, declares x4, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around mainjs, engine, skill, 27md, mostly in src/main.js, SKILL (27).md, src/engine/aiService.js. This section covers 130 nodes and 212 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (130 nodes, 212 edges)
+    subgraph cli_skills_src_main_js_c0b7de51["src/main.js"]
+        src_main_3231ff52("main.js")
+        src_main_setupeventlisteners_b47d8dbb("setupEventListeners()<br/><small>src/main.js</small>")
+        src_main_runprdgenerationpipeline_141feec5("runPRDGenerationPipeline()<br/><small>src/main.js</small>")
+        src_main_handlesaveaisettings_5e540ad2("handleSaveAISettings()<br/><small>src/main.js</small>")
+        src_main_loadtemplate_d4591d45("loadTemplate()<br/><small>src/main.js</small>")
+        src_main_handlerunplayground_7c0d1b45("handleRunPlayground()<br/><small>src/main.js</small>")
+        src_main_handlecopyjiramodal_6f86714b("handleCopyJiraModal()<br/><small>src/main.js</small>")
+        src_main_showtoast_f2849e8c("showToast()<br/><small>src/main.js</small>")
+        src_main_handledownloadjira_c75837a8("handleDownloadJira()<br/><small>src/main.js</small>")
+        src_main_updateinputsfromdom_5f06aa1d("updateInputsFromDOM()<br/><small>src/main.js</small>")
+        src_main_handlesyncnotion_387335cd("handleSyncNotion()<br/><small>src/main.js</small>")
+        src_main_initcleanworkspace_5a271344("initCleanWorkspace()<br/><small>src/main.js</small>")
+        src_main_refreshqaquestions_b9229af8("refreshQAQuestions()<br/><small>src/main.js</small>")
+    end
+    subgraph cli_skills_src_utils_exportUtils_js_563f5c6a["src/utils/exportUtils.js"]
+        src_utils_exportutils_copytoclipboard_008adfb9("copyToClipboard()<br/><small>src/utils/exportUtils.js</small>")
+        src_utils_exportutils_triggerconfetti_271c6886("triggerConfetti()<br/><small>src/utils/exportUtils.js</small>")
+        src_utils_exportutils_downloadmarkdown_8da27324("downloadMarkdown()<br/><small>src/utils/exportUtils.js</small>")
+    end
+    src_engine_playgroundengine_runplaygroundgenerat_8ee51852("runPlaygroundGeneration()<br/><small>src/engine/playgroundEngine.js</small>")
+    src_utils_jiranotionexporter_converttonotionbloc_9b9278f9("convertToNotionBlocks()<br/><small>src/utils/jiraNotionExporter.js</small>")
+    src_main_handlecopyjiramodal_6f86714b -->|calls| src_utils_exportutils_copytoclipboard_008adfb9
+    src_main_handlecopyjiramodal_6f86714b -->|calls| src_utils_exportutils_triggerconfetti_271c6886
+    src_main_handlecopyjiramodal_6f86714b -->|calls| src_main_showtoast_f2849e8c
+    src_main_handledownloadjira_c75837a8 -->|calls| src_utils_exportutils_downloadmarkdown_8da27324
+    src_main_handledownloadjira_c75837a8 -->|calls| src_main_showtoast_f2849e8c
+    src_main_handlerunplayground_7c0d1b45 -->|calls| src_main_updateinputsfromdom_5f06aa1d
+    src_main_handlerunplayground_7c0d1b45 -->|calls| src_engine_playgroundengine_runplaygroundgenerat_8ee51852
+    src_main_handlerunplayground_7c0d1b45 -->|calls| src_utils_exportutils_triggerconfetti_271c6886
+    src_main_handlerunplayground_7c0d1b45 -->|calls| src_main_showtoast_f2849e8c
+    src_main_handlesyncnotion_387335cd -->|calls| src_main_showtoast_f2849e8c
+    src_main_handlesyncnotion_387335cd -->|calls| src_utils_jiranotionexporter_converttonotionbloc_9b9278f9
+    src_main_handlesyncnotion_387335cd -->|calls| src_utils_exportutils_copytoclipboard_008adfb9
+    src_main_handlesyncnotion_387335cd -->|calls| src_utils_exportutils_triggerconfetti_271c6886
+    src_main_initcleanworkspace_5a271344 -->|calls| src_main_updateinputsfromdom_5f06aa1d
+    src_main_initcleanworkspace_5a271344 -->|calls| src_main_refreshqaquestions_b9229af8
+    src_main_loadtemplate_d4591d45 -->|calls| src_main_initcleanworkspace_5a271344
+    src_main_loadtemplate_d4591d45 -->|calls| src_main_updateinputsfromdom_5f06aa1d
+    src_main_loadtemplate_d4591d45 -->|calls| src_main_runprdgenerationpipeline_141feec5
+    src_main_runprdgenerationpipeline_141feec5 -->|calls| src_main_updateinputsfromdom_5f06aa1d
+    src_main_runprdgenerationpipeline_141feec5 -->|calls| src_utils_exportutils_triggerconfetti_271c6886
+    src_main_runprdgenerationpipeline_141feec5 -->|calls| src_main_showtoast_f2849e8c
+    src_main_setupeventlisteners_b47d8dbb -->|calls| src_main_loadtemplate_d4591d45
+    src_main_setupeventlisteners_b47d8dbb -->|calls| src_main_showtoast_f2849e8c
+    src_main_setupeventlisteners_b47d8dbb -->|calls| src_main_initcleanworkspace_5a271344
+    %% Omitted for readability: 112 nodes, 12 edges
+    class src_main_3231ff52 module;
+    class src_main_setupeventlisteners_b47d8dbb function;
+    class src_main_runprdgenerationpipeline_141feec5 function;
+    class src_main_handlesaveaisettings_5e540ad2 function;
+    class src_main_loadtemplate_d4591d45 function;
+    class src_main_handlerunplayground_7c0d1b45 function;
+    class src_main_handlecopyjiramodal_6f86714b function;
+    class src_main_showtoast_f2849e8c function;
+    class src_main_handledownloadjira_c75837a8 function;
+    class src_main_updateinputsfromdom_5f06aa1d function;
+    class src_main_handlesyncnotion_387335cd function;
+    class src_main_initcleanworkspace_5a271344 function;
+    class src_main_refreshqaquestions_b9229af8 function;
+    class src_utils_exportutils_copytoclipboard_008adfb9 entry;
+    class src_utils_exportutils_triggerconfetti_271c6886 function;
+    class src_utils_exportutils_downloadmarkdown_8da27324 function;
+    class src_engine_playgroundengine_runplaygroundgenerat_8ee51852 function;
+    class src_utils_jiranotionexporter_converttonotionbloc_9b9278f9 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>aiService.js</code><br><small style="color:var(--muted)">src/engine/aiService.js</small><br><code>convertToJiraMarkup()</code><br><small style="color:var(--muted)">src/utils/jiraNotionExporter.js</small><br><code>convertToNotionBlocks()</code><br><small style="color:var(--muted)">src/utils/jiraNotionExporter.js</small><br>+25 more</td>
+  <td>main.js node in src/main.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>aiApiKeyInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiApiKeyInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>aiBaseUrlInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiBaseUrlInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>aiEngineIcon</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiEngineIcon node in src/main.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>aiEngineLabel</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiEngineLabel node in src/main.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>aiModal</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiModal node in src/main.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>aiModelInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiModelInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>aiProviderSelect</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiProviderSelect node in src/main.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>aiSettingsBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>aiSettingsBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>apiKeyGroup</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>apiKeyGroup node in src/main.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>appToast</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>appToast node in src/main.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>auditContainer</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>auditContainer node in src/main.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>backToHomeBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>backToHomeBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>baseUrlGroup</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>baseUrlGroup node in src/main.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>businessUnitInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>businessUnitInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>cancelAiModalBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>cancelAiModalBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>closeAiModalBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>closeAiModalBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>closeJiraModalBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>closeJiraModalBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>copyJiraModalBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>copyJiraModalBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>copyPlaygroundBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>copyPlaygroundBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>copyPrdBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>copyPrdBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>currentInputs</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>currentInputs node in src/main.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>currentQA</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>currentQA node in src/main.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>currentQAAnswers</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>currentQAAnswers node in src/main.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>downloadJiraBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>downloadJiraBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>downloadPrdBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>downloadPrdBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>editToggleBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>editToggleBtn node in src/main.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>epicIdInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>epicIdInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>featureNameInput</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>featureNameInput node in src/main.js.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>generateBtn</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>generateBtn node in src/main.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/main.js</code></td><td>99 nodes</td></tr>
+<tr><td><code>SKILL (27).md</code></td><td>11 nodes</td></tr>
+<tr><td><code>src/engine/aiService.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>src/engine/playgroundEngine.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>src/utils/exportUtils.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/utils/jiraNotionExporter.js</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x122, calls x62, indirect call x13, imports x11. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Engine Prdgeneratorjs Cpoauditenginejs ====== -->
+<h2 id="engine-prdgeneratorjs-cpoauditenginejs">4. Engine Prdgeneratorjs Cpoauditenginejs</h2>
+<p>Engine Prdgeneratorjs Cpoauditenginejs groups implementation around engine, prdgeneratorjs, cpoauditenginejs, domaindetectorjs, mostly in src/engine/prdGenerator.js, src/engine/cpoAuditEngine.js, src/engine/domainDetector.js. This section covers 14 nodes and 28 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Engine Prdgeneratorjs Cpoauditenginejs (14 nodes, 28 edges)
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_e64cbbe0["src/engine/prdGenerator.js"]
+        src_engine_prdgenerator_8898fcae("prdGenerator.js")
+        src_engine_prdgenerator_generatefullprd_e6692da6("generateFullPRD()<br/><small>src/engine/prdGenerator.js</small>")
+        src_engine_prdgenerator_getdefaultpersonasfordom_2af160e4("getDefaultPersonasForDomain()<br/><small>src/engine/prdGenerator.js</small>")
+        src_engine_prdgenerator_getdomainspecs_93f9b19b("getDomainSpecs()<br/><small>src/engine/prdGenerator.js</small>")
+    end
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_0247e30b["src/engine/cpoAuditEngine.js"]
+        src_engine_cpoauditengine_d36c4bce("cpoAuditEngine.js")
+        src_engine_cpoauditengine_runcpoaudit_33601450("runCPOAudit()<br/><small>src/engine/cpoAuditEngine.js</small>")
+    end
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_f13657aa["src/engine/domainDetector.js"]
+        src_engine_domaindetector_detectdomain_a89e0872("detectDomain()<br/><small>src/engine/domainDetector.js</small>")
+        src_engine_domaindetector_74f0feaf("domainDetector.js")
+    end
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_76f85557["src/engine/qaGenerator.js"]
+        src_engine_qagenerator_4fade612("qaGenerator.js")
+        src_engine_qagenerator_generateclarifyingquestio_993ea22c("generateClarifyingQuestions()<br/><small>src/engine/qaGenerator.js</small>")
+    end
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_a94a10b1["src/engine/telemetryEngine.js"]
+        src_engine_telemetryengine_af8d62c3("telemetryEngine.js")
+        src_engine_telemetryengine_gettelemetrydata_dd0a24f1("getTelemetryData()<br/><small>src/engine/telemetryEngine.js</small>")
+    end
+    subgraph engine_prdgeneratorjs_cpoauditenginejs_src_engin_82ae341f["src/engine/wireframeEngine.js"]
+        src_engine_wireframeengine_f19ef161("wireframeEngine.js")
+        src_engine_wireframeengine_getwireframespec_ef3c0835("getWireframeSpec()<br/><small>src/engine/wireframeEngine.js</small>")
+    end
+    src_engine_cpoauditengine_runcpoaudit_33601450 -->|calls| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_prdgenerator_generatefullprd_e6692da6 -->|calls| src_engine_prdgenerator_getdefaultpersonasfordom_2af160e4
+    src_engine_prdgenerator_generatefullprd_e6692da6 -->|calls| src_engine_telemetryengine_gettelemetrydata_dd0a24f1
+    src_engine_prdgenerator_generatefullprd_e6692da6 -->|calls| src_engine_prdgenerator_getdomainspecs_93f9b19b
+    src_engine_prdgenerator_generatefullprd_e6692da6 -->|calls| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_qagenerator_generateclarifyingquestio_993ea22c -->|calls| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_telemetryengine_gettelemetrydata_dd0a24f1 -->|calls| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_wireframeengine_getwireframespec_ef3c0835 -->|calls| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_cpoauditengine_d36c4bce -->|imports| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_cpoauditengine_d36c4bce -->|imports| src_engine_domaindetector_74f0feaf
+    src_engine_prdgenerator_8898fcae -->|imports| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_prdgenerator_8898fcae -->|imports| src_engine_telemetryengine_gettelemetrydata_dd0a24f1
+    src_engine_prdgenerator_8898fcae -->|imports| src_engine_domaindetector_74f0feaf
+    src_engine_prdgenerator_8898fcae -->|imports| src_engine_telemetryengine_af8d62c3
+    src_engine_qagenerator_4fade612 -->|imports| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_qagenerator_4fade612 -->|imports| src_engine_domaindetector_74f0feaf
+    src_engine_telemetryengine_af8d62c3 -->|imports| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_telemetryengine_af8d62c3 -->|imports| src_engine_domaindetector_74f0feaf
+    src_engine_wireframeengine_f19ef161 -->|imports| src_engine_domaindetector_detectdomain_a89e0872
+    src_engine_wireframeengine_f19ef161 -->|imports| src_engine_domaindetector_74f0feaf
+    class src_engine_prdgenerator_8898fcae module;
+    class src_engine_prdgenerator_generatefullprd_e6692da6 function;
+    class src_engine_prdgenerator_getdefaultpersonasfordom_2af160e4 function;
+    class src_engine_prdgenerator_getdomainspecs_93f9b19b function;
+    class src_engine_cpoauditengine_d36c4bce module;
+    class src_engine_cpoauditengine_runcpoaudit_33601450 function;
+    class src_engine_domaindetector_detectdomain_a89e0872 function;
+    class src_engine_domaindetector_74f0feaf module;
+    class src_engine_qagenerator_4fade612 module;
+    class src_engine_qagenerator_generateclarifyingquestio_993ea22c function;
+    class src_engine_telemetryengine_af8d62c3 module;
+    class src_engine_telemetryengine_gettelemetrydata_dd0a24f1 function;
+    class src_engine_wireframeengine_f19ef161 module;
+    class src_engine_wireframeengine_getwireframespec_ef3c0835 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>runCPOAudit()</code><br><small style="color:var(--muted)">src/engine/cpoAuditEngine.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>renderCPOAuditDashboard()</code><br><small style="color:var(--muted)">src/main.js</small><br><code>runPRDGenerationPipeline()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>runCPOAudit() node in src/engine/cpoAuditEngine.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>cpoAuditEngine.js</code><br><small style="color:var(--muted)">src/engine/cpoAuditEngine.js</small><br><code>generateClarifyingQuestions()</code><br><small style="color:var(--muted)">src/engine/qaGenerator.js</small><br><code>generateFullPRD()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br>+9 more</td>
+  <td>No direct outbound edge</td>
+  <td>detectDomain() node in src/engine/domainDetector.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>generateFullPRD()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>aiService.js</code><br><small style="color:var(--muted)">src/engine/aiService.js</small><br><code>generateBuiltinWithProgress()</code><br><small style="color:var(--muted)">src/engine/aiService.js</small><br><code>playgroundEngine.js</code><br><small style="color:var(--muted)">src/engine/playgroundEngine.js</small><br>+1 more</td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>getDefaultPersonasForDomain()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br><code>getDomainSpecs()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br>+1 more</td>
+  <td>generateFullPRD() node in src/engine/prdGenerator.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>getDefaultPersonasForDomain()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>generateFullPRD()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getDefaultPersonasForDomain() node in src/engine/prdGenerator.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>getDomainSpecs()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>generateFullPRD()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getDomainSpecs() node in src/engine/prdGenerator.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>generateClarifyingQuestions()</code><br><small style="color:var(--muted)">src/engine/qaGenerator.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>refreshQAQuestions()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>generateClarifyingQuestions() node in src/engine/qaGenerator.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>getTelemetryData()</code><br><small style="color:var(--muted)">src/engine/telemetryEngine.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>generateFullPRD()</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>prdGenerator.js</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br>+1 more</td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>getTelemetryData() node in src/engine/telemetryEngine.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>getWireframeSpec()</code><br><small style="color:var(--muted)">src/engine/wireframeEngine.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>runPRDGenerationPipeline()</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>getWireframeSpec() node in src/engine/wireframeEngine.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>cpoAuditEngine.js</code><br><small style="color:var(--muted)">src/engine/cpoAuditEngine.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>cpoAuditEngine.js node in src/engine/cpoAuditEngine.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>cpoAuditEngine.js</code><br><small style="color:var(--muted)">src/engine/cpoAuditEngine.js</small><br><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>prdGenerator.js</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small><br>+3 more</td>
+  <td>No direct outbound edge</td>
+  <td>domainDetector.js node in src/engine/domainDetector.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>prdGenerator.js</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>aiService.js</code><br><small style="color:var(--muted)">src/engine/aiService.js</small><br><code>playgroundEngine.js</code><br><small style="color:var(--muted)">src/engine/playgroundEngine.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>getTelemetryData()</code><br><small style="color:var(--muted)">src/engine/telemetryEngine.js</small><br>+1 more</td>
+  <td>prdGenerator.js node in src/engine/prdGenerator.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>qaGenerator.js</code><br><small style="color:var(--muted)">src/engine/qaGenerator.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>qaGenerator.js node in src/engine/qaGenerator.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>telemetryEngine.js</code><br><small style="color:var(--muted)">src/engine/telemetryEngine.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small><br><code>prdGenerator.js</code><br><small style="color:var(--muted)">src/engine/prdGenerator.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>telemetryEngine.js node in src/engine/telemetryEngine.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>wireframeEngine.js</code><br><small style="color:var(--muted)">src/engine/wireframeEngine.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td><code>detectDomain()</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small><br><code>domainDetector.js</code><br><small style="color:var(--muted)">src/engine/domainDetector.js</small></td>
+  <td>wireframeEngine.js node in src/engine/wireframeEngine.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/engine/prdGenerator.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>src/engine/cpoAuditEngine.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/engine/domainDetector.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/engine/qaGenerator.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/engine/telemetryEngine.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/engine/wireframeEngine.js</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x8, contains x8, imports x6, imports x6. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Review Logmd Pass ====== -->
+<h2 id="review-logmd-pass">5. Review Logmd Pass</h2>
+<p>Review Logmd Pass groups implementation around review, logmd, pass, working, mostly in REVIEW_LOG.md. This section covers 12 nodes and 11 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Review Logmd Pass (12 nodes, 11 edges)
+    review_log_website_self_review_log_the_prd_bot_a7cac1d0("Website Self-Review Log: THE PRD BOT<br/><small>REVIEW_LOG.md</small>")
+    review_log_pass_2_transformation_to_universal_ai_34e1e6c7("Pass 2: Transformation to Universal AI...<br/><small>REVIEW_LOG.md</small>")
+    review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1("Pass 3: Usability Overhaul, 1-Click Not...<br/><small>REVIEW_LOG.md</small>")
+    review_log_6be41431("REVIEW_LOG.md")
+    review_log_working_well_e0bd9a7f("Working Well<br/><small>REVIEW_LOG.md</small>")
+    review_log_not_working_deficiencies_identified_a_f6349dd7("Not Working / Deficiencies Identified (...<br/><small>REVIEW_LOG.md</small>")
+    review_log_deficiencies_identified_solved_in_pas_f8581a56("Deficiencies Identified &amp; Solved in Pass 3<br/><small>REVIEW_LOG.md</small>")
+    review_log_goal_definition_step_0_b48919cb("Goal Definition (Step 0)<br/><small>REVIEW_LOG.md</small>")
+    review_log_pass_1_cca31d37("Pass 1<br/><small>REVIEW_LOG.md</small>")
+    review_log_solutions_implementation_summary_4427a76a("Solutions &amp; Implementation Summary<br/><small>REVIEW_LOG.md</small>")
+    review_log_summary_of_what_was_added_d5af95ad("Summary of What Was Added<br/><small>REVIEW_LOG.md</small>")
+    review_log_working_well_61_38dbaa71("Working Well<br/><small>REVIEW_LOG.md</small>")
+    review_log_6be41431 -->|contains| review_log_website_self_review_log_the_prd_bot_a7cac1d0
+    review_log_pass_2_transformation_to_universal_ai_34e1e6c7 -->|contains| review_log_working_well_e0bd9a7f
+    review_log_pass_2_transformation_to_universal_ai_34e1e6c7 -->|contains| review_log_not_working_deficiencies_identified_a_f6349dd7
+    review_log_pass_2_transformation_to_universal_ai_34e1e6c7 -->|contains| review_log_solutions_implementation_summary_4427a76a
+    review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1 -->|contains| review_log_working_well_61_38dbaa71
+    review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1 -->|contains| review_log_deficiencies_identified_solved_in_pas_f8581a56
+    review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1 -->|contains| review_log_summary_of_what_was_added_d5af95ad
+    review_log_website_self_review_log_the_prd_bot_a7cac1d0 -->|contains| review_log_pass_1_cca31d37
+    review_log_website_self_review_log_the_prd_bot_a7cac1d0 -->|contains| review_log_pass_2_transformation_to_universal_ai_34e1e6c7
+    review_log_website_self_review_log_the_prd_bot_a7cac1d0 -->|contains| review_log_goal_definition_step_0_b48919cb
+    review_log_website_self_review_log_the_prd_bot_a7cac1d0 -->|contains| review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1
+    class review_log_website_self_review_log_the_prd_bot_a7cac1d0 concept;
+    class review_log_pass_2_transformation_to_universal_ai_34e1e6c7 concept;
+    class review_log_pass_3_usability_overhaul_1_click_not_33cbc5f1 concept;
+    class review_log_6be41431 concept;
+    class review_log_working_well_e0bd9a7f concept;
+    class review_log_not_working_deficiencies_identified_a_f6349dd7 concept;
+    class review_log_deficiencies_identified_solved_in_pas_f8581a56 concept;
+    class review_log_goal_definition_step_0_b48919cb concept;
+    class review_log_pass_1_cca31d37 concept;
+    class review_log_solutions_implementation_summary_4427a76a concept;
+    class review_log_summary_of_what_was_added_d5af95ad concept;
+    class review_log_working_well_61_38dbaa71 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>REVIEW_LOG.md</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing REVIEW_LOG.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Deficiencies Identified &amp; Solved in Pass 3</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Deficiencies Identified &amp; Solved in Pass 3.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Goal Definition (Step 0)</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Goal Definition (Step 0).</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Not Working / Deficiencies Identified (Addressed in Pass 2)</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Not Working / Deficiencies Identified (Addressed in Pass 2).</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Pass 1</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Pass 1.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Pass 2: Transformation to Universal AI Tool for Product Managers</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Pass 2: Transformation to Universal AI Tool for Product Managers.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Pass 3: Usability Overhaul, 1-Click Notion/Jira Sync &amp; AI Model Playground</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Pass 3: Usability Overhaul, 1-Click Notion/Jira Sync &amp; AI Model Playground.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Solutions &amp; Implementation Summary</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Solutions &amp; Implementation Summary.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Summary of What Was Added</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Summary of What Was Added.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>Website Self-Review Log: THE PRD BOT</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Website Self-Review Log: THE PRD BOT.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>Working Well</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Working Well.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Working Well</code><br><small style="color:var(--muted)">REVIEW_LOG.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Working Well.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>REVIEW_LOG.md</code></td><td>12 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x11. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Cursordesignmd Known Gaps ====== -->
+<h2 id="cursordesignmd-known-gaps">6. Cursordesignmd Known Gaps</h2>
+<p>Cursordesignmd Known Gaps groups implementation around cursordesignmd, known, gaps, overview, mostly in cursor.design.md. This section covers 3 nodes and 2 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Cursordesignmd Known Gaps (3 nodes, 2 edges)
+    cursor_design_ed6b9e0e("cursor.design.md")
+    cursor_design_overview_1064f939("Overview<br/><small>cursor.design.md</small>")
+    cursor_design_known_gaps_99ee92dd("Known Gaps<br/><small>cursor.design.md</small>")
+    cursor_design_ed6b9e0e -->|contains| cursor_design_overview_1064f939
+    cursor_design_ed6b9e0e -->|contains| cursor_design_known_gaps_99ee92dd
+    class cursor_design_ed6b9e0e concept;
+    class cursor_design_overview_1064f939 concept;
+    class cursor_design_known_gaps_99ee92dd concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>cursor.design.md</code><br><small style="color:var(--muted)">cursor.design.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing cursor.design.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Known Gaps</code><br><small style="color:var(--muted)">cursor.design.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Known Gaps.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Overview</code><br><small style="color:var(--muted)">cursor.design.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Overview.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>cursor.design.md</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Templatesjs Data Templates ====== -->
+<h2 id="templatesjs-data-templates">7. Templatesjs Data Templates</h2>
+<p>Templatesjs Data Templates groups implementation around templatesjs, data, templates, mostly in src/data/templates.js. This section covers 2 nodes and 1 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Templatesjs Data Templates (2 nodes, 1 edges)
+    src_data_templates_8feadc32("templates.js")
+    src_data_templates_templates_232ee203("TEMPLATES<br/><small>src/data/templates.js</small>")
+    src_data_templates_8feadc32 -->|contains| src_data_templates_templates_232ee203
+    class src_data_templates_8feadc32 module;
+    class src_data_templates_templates_232ee203 klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>templates.js</code><br><small style="color:var(--muted)">src/data/templates.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>templates.js node in src/data/templates.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>TEMPLATES</code><br><small style="color:var(--muted)">src/data/templates.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>TEMPLATES node in src/data/templates.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/data/templates.js</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Agentsmd Graphify ====== -->
+<h2 id="agentsmd-graphify">8. Agentsmd Graphify</h2>
+<p>Agentsmd Graphify groups implementation around agentsmd, graphify, mostly in AGENTS.md. This section covers 2 nodes and 1 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Agentsmd Graphify (2 nodes, 1 edges)
+    agents_e7052aeb("AGENTS.md")
+    agents_graphify_933e8fd9("graphify<br/><small>AGENTS.md</small>")
+    agents_e7052aeb -->|contains| agents_graphify_933e8fd9
+    class agents_e7052aeb concept;
+    class agents_graphify_933e8fd9 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>AGENTS.md</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing AGENTS.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>graphify</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing graphify.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>AGENTS.md</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 9. Geminimd Graphify ====== -->
+<h2 id="geminimd-graphify">9. Geminimd Graphify</h2>
+<p>Geminimd Graphify groups implementation around geminimd, graphify, mostly in GEMINI.md. This section covers 2 nodes and 1 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Geminimd Graphify (2 nodes, 1 edges)
+    gemini_468da084("GEMINI.md")
+    gemini_graphify_a7c05bf2("graphify<br/><small>GEMINI.md</small>")
+    gemini_468da084 -->|contains| gemini_graphify_a7c05bf2
+    class gemini_468da084 concept;
+    class gemini_graphify_a7c05bf2 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>GEMINI.md</code><br><small style="color:var(--muted)">GEMINI.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing GEMINI.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>graphify</code><br><small style="color:var(--muted)">GEMINI.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing graphify.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>GEMINI.md</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>215</td></tr>
+      <tr><td>Edges</td><td>341</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>13</td></tr>
+      <tr><td>Documented Sections</td><td>8</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>328</td></tr>
+      <tr><td>INFERRED</td><td>13</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>THEPRDBOT — Architecture Documentation</p>
+  <p>Generated: 2026-11-16 03:13 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>

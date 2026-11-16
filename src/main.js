@@ -342,28 +342,28 @@ function setupEventListeners() {
   const gwStudioPill = document.getElementById('gwStudioPill');
   if (gwStudioPill) {
     gwStudioPill.addEventListener('click', () => {
-      showToast('📍 Active Workspace: THE PRD BOT Studio');
+      showToast('Active Workspace: Studio');
     });
   }
 
   const gwHelpBtn = document.getElementById('gwHelpBtn');
   if (gwHelpBtn) {
     gwHelpBtn.addEventListener('click', () => {
-      showToast('💡 1. Enter project idea. 2. Answer domain Q&A. 3. Click Generate PRD!');
+      showToast('Tip: Enter project details, answer domain Q&A, and generate PRD');
     });
   }
 
   const gwConnectBtn = document.getElementById('gwConnectBtn');
   if (gwConnectBtn) {
     gwConnectBtn.addEventListener('click', () => {
-      showToast('🔗 Google Workspace Synced: Drive, Docs, and Calendar connected!');
+      showToast('Google Workspace connected: Drive, Docs, and Calendar');
     });
   }
 
   const gwUserAvatar = document.getElementById('gwUserAvatar');
   if (gwUserAvatar) {
     gwUserAvatar.addEventListener('click', () => {
-      showToast('👤 PM Workspace: Ram Chandar Sanaboyina (Owner)');
+      showToast('Workspace: Ram Chandar Sanaboyina (Owner)');
     });
   }
 
@@ -371,7 +371,7 @@ function setupEventListeners() {
   if (navItemStudio) {
     navItemStudio.addEventListener('click', () => {
       navigateToStudio('prd');
-      showToast('📍 Studio Workspace');
+      showToast('Studio Workspace active');
     });
   }
 
@@ -398,7 +398,7 @@ function setupEventListeners() {
       }
       copyToClipboard(currentPRDMarkdown).then(() => {
         triggerConfetti();
-        showToast('📄 Copied Google Docs formatted markdown!');
+        showToast('Copied Google Docs formatted markdown');
       });
     });
   }
@@ -410,7 +410,7 @@ function setupEventListeners() {
       const searchInput = document.getElementById('gwSearchInput');
       if (searchInput) {
         searchInput.focus();
-        showToast('🔍 Search focused (Ctrl+K)');
+        showToast('Search focused (Ctrl+K)');
       }
     }
   });
@@ -421,7 +421,7 @@ function setupEventListeners() {
       if (e.key === 'Enter') {
         const query = e.target.value.toLowerCase().trim();
         if (query) {
-          showToast(`🔍 Searching for "${query}" across projects & templates...`);
+          showToast(`Searching for "${query}" across projects and templates...`);
         }
       }
     });
@@ -433,7 +433,7 @@ function setupEventListeners() {
     sidebarNewPrdBtn.addEventListener('click', () => {
       resetBtn.click();
       featureNameInput.focus();
-      showToast('✨ Started clean PRD canvas.');
+      showToast('Started clean PRD canvas');
     });
   }
 
@@ -449,9 +449,9 @@ function setupEventListeners() {
     navItemProjects.addEventListener('click', () => {
       const saved = localStorage.getItem('theprdbot_saved_draft');
       if (saved) {
-        showToast('📂 Auto-saved PRD found and ready in Studio.');
+        showToast('Auto-saved PRD loaded in Studio');
       } else {
-        showToast('📂 1 active project: Current PRD canvas.');
+        showToast('1 active project: Current PRD canvas');
       }
     });
   }
@@ -460,7 +460,7 @@ function setupEventListeners() {
   if (navItemTemplates) {
     navItemTemplates.addEventListener('click', () => {
       templateSelect.focus();
-      showToast('💡 Choose an archetype from the top dropdown.');
+      showToast('Select an archetype from the dropdown');
     });
   }
 
@@ -474,7 +474,7 @@ function setupEventListeners() {
   const navItemTeam = document.getElementById('navItemTeam');
   if (navItemTeam) {
     navItemTeam.addEventListener('click', () => {
-      showToast('👥 Active Workspace: Ram Chandar Sanaboyina (Owner).');
+      showToast('Workspace: Ram Chandar Sanaboyina (Owner)');
     });
   }
 
@@ -488,7 +488,7 @@ function setupEventListeners() {
   const sidebarUpgradeBtn = document.getElementById('sidebarUpgradeBtn');
   if (sidebarUpgradeBtn) {
     sidebarUpgradeBtn.addEventListener('click', () => {
-      showToast('🚀 Pro Tier: Unlimited PRDs, 2M Context, Jira/Notion Auto-Sync.');
+      showToast('Pro Tier: Unlimited PRDs, 2M Context, Jira/Notion Sync');
     });
   }
 
@@ -501,7 +501,7 @@ function setupEventListeners() {
         markdown: currentPRDMarkdown,
         savedAt: new Date().toISOString()
       }));
-      showToast('💾 Draft successfully saved to local storage!');
+      showToast('Draft successfully saved to local storage');
     });
   }
 
@@ -534,7 +534,7 @@ function setupEventListeners() {
       return;
     }
     copyToClipboard(currentPRDMarkdown).then(() => {
-      showToast('Markdown copied to clipboard! ✓');
+      showToast('Markdown copied to clipboard');
     });
   });
 
@@ -576,7 +576,7 @@ function setupEventListeners() {
     copyPlaygroundBtn.addEventListener('click', () => {
       if (!playgroundOutputText) return;
       copyToClipboard(playgroundOutputText).then(() => {
-        showToast('Playground output copied to clipboard! ✓');
+        showToast('Playground output copied to clipboard');
       });
     });
   }
@@ -617,7 +617,7 @@ function handleSyncNotion() {
   const notionMarkdown = convertToNotionBlocks(currentPRDMarkdown, currentInputs);
   copyToClipboard(notionMarkdown).then(() => {
     triggerConfetti();
-    showToast('📑 Notion-ready blocks copied! Paste directly into any Notion page.');
+    showToast('Notion blocks copied to clipboard');
   });
 }
 
@@ -636,7 +636,7 @@ function handleCopyJiraModal() {
   const text = jiraMarkupText.value;
   copyToClipboard(text).then(() => {
     triggerConfetti();
-    showToast('🔷 Jira markup copied to clipboard! Paste into Jira description.');
+    showToast('Jira markup copied to clipboard');
   });
 }
 
@@ -651,16 +651,16 @@ function handleDownloadJira() {
 function updateAIEngineBadge() {
   const settings = getAISettings();
   if (settings.provider === 'claude') {
-    if (aiEngineIcon) aiEngineIcon.innerText = '🟣';
+    if (aiEngineIcon) aiEngineIcon.innerText = '';
     if (aiEngineLabel) aiEngineLabel.innerText = `Claude (${settings.model || 'haiku'})`;
   } else if (settings.provider === 'gemini') {
-    if (aiEngineIcon) aiEngineIcon.innerText = '✨';
+    if (aiEngineIcon) aiEngineIcon.innerText = '';
     if (aiEngineLabel) aiEngineLabel.innerText = `Gemini (${settings.model || 'flash'})`;
   } else if (settings.provider === 'openai' || settings.provider === 'custom') {
-    if (aiEngineIcon) aiEngineIcon.innerText = '🤖';
+    if (aiEngineIcon) aiEngineIcon.innerText = '';
     if (aiEngineLabel) aiEngineLabel.innerText = `${settings.provider === 'custom' ? 'Custom' : 'OpenAI'} (${settings.model || 'gpt'})`;
   } else {
-    if (aiEngineIcon) aiEngineIcon.innerText = '⚡';
+    if (aiEngineIcon) aiEngineIcon.innerText = '';
     if (aiEngineLabel) aiEngineLabel.innerText = 'Built-in Engine';
   }
 }
@@ -884,7 +884,7 @@ async function runPRDGenerationPipeline() {
   const studioGenBtn = document.getElementById('studioGeneratePrdBtn');
   if (studioGenBtn) {
     studioGenBtn.disabled = true;
-    studioGenBtn.innerHTML = '<span>⚡</span> Generating PRD...';
+    studioGenBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> <span>Generating PRD...</span>';
   }
 
   try {
@@ -905,7 +905,7 @@ async function runPRDGenerationPipeline() {
 
       if (studioGenBtn) {
         const shortText = text.length > 28 ? text.slice(0, 28) + '...' : text;
-        studioGenBtn.innerHTML = `<span>⚡</span> ${shortText}`;
+        studioGenBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> <span>${shortText}</span>`;
       }
     });
 
@@ -946,7 +946,7 @@ async function runPRDGenerationPipeline() {
     const studioGenBtn = document.getElementById('studioGeneratePrdBtn');
     if (studioGenBtn) {
       studioGenBtn.disabled = false;
-      studioGenBtn.innerHTML = '<span>✨</span> Generate PRD →';
+      studioGenBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> <span>Generate PRD →</span>';
     }
   }
 }
@@ -955,7 +955,7 @@ async function runPRDGenerationPipeline() {
 async function handleRunPlayground() {
   updateInputsFromDOM();
   runPlaygroundBtn.disabled = true;
-  runPlaygroundBtn.innerText = '⚡ Running...';
+  runPlaygroundBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Running...';
   playgroundOutput.innerHTML = `<div style="text-align:center; padding:30px; color:var(--color-muted);">Querying model and synthesizing framework style...</div>`;
 
   const modelId = playgroundModelSelect.value;
@@ -987,7 +987,7 @@ async function handleRunPlayground() {
     showToast(`Playground error: ${err.message}`);
   } finally {
     runPlaygroundBtn.disabled = false;
-    runPlaygroundBtn.innerText = '🚀 Run Model Test';
+    runPlaygroundBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> <span>Run Model Test</span>';
   }
 }
 
@@ -1062,7 +1062,7 @@ function renderCPOAuditDashboard(audit) {
   // Attach Apply Rec Handlers
   auditContainer.querySelectorAll('.apply-rec-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      btn.innerText = 'Applied ✓';
+      btn.innerText = 'Applied';
       btn.disabled = true;
       btn.style.backgroundColor = 'var(--color-success)';
 
@@ -1101,7 +1101,7 @@ function renderWireframeView(wireframeData) {
         <div style="font-size:18px; font-weight:700;">${wireframeData.title}</div>
         <div style="font-size:13px; color:var(--color-body);">${wireframeData.subtitle}</div>
       </div>
-      <button id="exportFigmaBtn" class="btn btn-secondary btn-sm">📦 Export Figma Make Spec (JSON)</button>
+      <button id="exportFigmaBtn" class="btn btn-secondary btn-sm"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> <span>Export Figma Spec (JSON)</span></button>
     </div>
 
     <!-- Live Interactive Wireframe Preview Canvas -->
@@ -1198,7 +1198,7 @@ function renderWireframeView(wireframeData) {
 
   if (primaryBtn) {
     primaryBtn.addEventListener('click', () => {
-      primaryBtn.innerText = 'Executed ✓';
+      primaryBtn.innerText = 'Executed';
       primaryBtn.style.backgroundColor = 'var(--color-success)';
       triggerConfetti();
       setTimeout(() => {
@@ -1299,7 +1299,7 @@ function toggleTheme() {
 
   document.documentElement.setAttribute('data-theme', newTheme);
   document.querySelectorAll('.themeIcon').forEach(el => {
-    el.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+    el.innerHTML = newTheme === 'dark' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
   });
   document.querySelectorAll('.themeLabel').forEach(el => {
     el.innerText = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';

@@ -22,7 +22,7 @@
 
       <div class="landing-actions">
         <button id="landingThemeToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Light/Dark Theme">
-          <span class="themeIcon">🌙</span> <span class="themeLabel">Dark Mode</span>
+          <svg class="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> <span class="themeLabel">Dark Mode</span>
         </button>
         <button id="landingNavCta" class="hero-pill-cta" style="padding:8px 18px; font-size:13px; cursor:pointer;">Create your PRD →</button>
       </div>
@@ -42,7 +42,7 @@
 
       <div class="hero-actions">
         <button id="heroCreatePrdBtn" class="hero-pill-cta" style="cursor:pointer;">Create your PRD →</button>
-        <button id="heroOpenPlaygroundBtn" class="hero-pill-secondary" style="cursor:pointer;">Explore AI Playground ⚡</button>
+        <button id="heroOpenPlaygroundBtn" class="hero-pill-secondary" style="cursor:pointer;">Explore AI Playground →</button>
       </div>
 
       <!-- Hero Aesthetic Animation (Blended into canvas) -->
@@ -205,18 +205,18 @@
       <div class="gw-nav-right">
         <!-- Hidden Template and Engine Selectors for state management -->
         <select id="templateSelect" class="template-select" style="display:none;">
-          <option value="custom" selected>✨ Custom Blank Project (Clean Canvas)</option>
-          <option value="fintech_fraud">💳 Fintech: Real-Time Fraud Shield & Auth</option>
-          <option value="health_scribe">🏥 HealthTech: Ambient Clinical Scribe & EHR Sync</option>
-          <option value="ecommerce_checkout">🛒 E-Commerce: 1-Click Checkout & Recovery</option>
-          <option value="devtools_apm">🛠️ DevTools: Distributed Tracing & Incident Copilot</option>
-          <option value="agent_copilot">🤖 AI Agent: Autonomous Research with Citations</option>
-          <option value="b2b_saas_rbac">🏢 B2B SaaS: Workspace & RBAC Governance</option>
-          <option value="freshworks_triage">🎧 Support Ops: Ticket Triage & SLA Escalation</option>
+          <option value="custom" selected>Custom Blank Project (Clean Canvas)</option>
+          <option value="fintech_fraud">Fintech: Real-Time Fraud Shield & Auth</option>
+          <option value="health_scribe">HealthTech: Ambient Clinical Scribe & EHR Sync</option>
+          <option value="ecommerce_checkout">E-Commerce: 1-Click Checkout & Recovery</option>
+          <option value="devtools_apm">DevTools: Distributed Tracing & Incident Copilot</option>
+          <option value="agent_copilot">AI Agent: Autonomous Research with Citations</option>
+          <option value="b2b_saas_rbac">B2B SaaS: Workspace & RBAC Governance</option>
+          <option value="freshworks_triage">Support Ops: Ticket Triage & SLA Escalation</option>
         </select>
         <button id="backToHomeBtn" style="display:none;"></button>
         <button id="resetBtn" style="display:none;"></button>
-        <button id="studioThemeToggleBtn" style="display:none;"><span class="themeIcon">🌙</span></button>
+        <button id="studioThemeToggleBtn" style="display:none;"><svg class="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 
         <button id="gwHelpBtn" class="gw-icon-btn" title="Help & Documentation">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -241,7 +241,7 @@
             <circle cx="12" cy="19" r="2"></circle>
             <circle cx="19" cy="19" r="2"></circle>
           </svg>
-          <span id="aiEngineIcon" style="display:none;">🟣</span>
+          <span id="aiEngineIcon" style="display:none;"></span>
         </button>
 
         <!-- Blue User Avatar Circle with White 'R' -->
@@ -338,32 +338,32 @@
         <div id="tabContentSetup" class="gw-tab-content">
           <div class="gw-field-group">
             <label class="gw-field-label" for="businessUnit">
-              <span class="gw-label-icon">🏢</span> Business Unit / Industry Domain
+              <span class="gw-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="2"/><line x1="8" y1="6" x2="10" y2="6"/><line x1="14" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg></span> Business Unit / Industry Domain
             </label>
             <input type="text" id="businessUnit" class="gw-text-input" placeholder="e.g., Fintech & Payments, HealthTech, E-commerce, DevTools..." />
           </div>
 
           <div class="gw-field-group">
             <label class="gw-field-label" for="featureName">
-              <span class="gw-label-icon">🥞</span> Feature Name / Strategic Initiative
+              <span class="gw-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span> Feature Name / Strategic Initiative
             </label>
             <input type="text" id="featureName" class="gw-text-input active-input" placeholder="e.g., Real-Time Fraud Shield, 1-Click Express Checkout..." />
 
             <!-- Quick Load Pills -->
             <div class="gw-quick-load-row">
               <span class="gw-quick-label">Quick Load:</span>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="fintech_fraud">⚡ Fraud Shield</button>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="health_scribe">♡ Clinical Scribe</button>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="ecommerce_checkout">🛒 1-Click Checkout</button>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="devtools_apm">📈 Tracing APM</button>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="agent_copilot">🤖 AI Agent</button>
-              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="b2b_saas_rbac">🗄️ B2B RBAC</button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="fintech_fraud"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>Fraud Shield</span></button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="health_scribe"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> <span>Clinical Scribe</span></button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="ecommerce_checkout"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> <span>1-Click Checkout</span></button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="devtools_apm"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> <span>Tracing APM</span></button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="agent_copilot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/><circle cx="12" cy="16.5" r="1.5"/></svg> <span>AI Agent</span></button>
+              <button type="button" class="gw-quick-pill quick-idea-pill" data-tpl="b2b_saas_rbac"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> <span>B2B RBAC</span></button>
             </div>
           </div>
 
           <div class="gw-field-group">
             <label class="gw-field-label" for="epicId">
-              <span class="gw-label-icon">🏷️</span> Epic ID / Tracking Reference
+              <span class="gw-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r="2"/></svg></span> Epic ID / Tracking Reference
             </label>
             <input type="text" id="epicId" class="gw-text-input" placeholder="e.g., EPIC-PRD-8920" />
           </div>
@@ -371,7 +371,7 @@
           <div class="gw-field-group">
             <div class="gw-field-label-row">
               <label class="gw-field-label" style="margin-bottom:0;">
-                <span class="gw-label-icon">👥</span> Target Personas
+                <span class="gw-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Target Personas
               </label>
               <span class="gw-label-hint">Click to toggle</span>
             </div>
@@ -405,7 +405,7 @@
 
           <div class="gw-field-group">
             <label class="gw-field-label" for="problemStatement">
-              <span class="gw-label-icon">📄</span> Problem Statement, Friction & Why Now?
+              <span class="gw-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Problem Statement, Friction & Why Now?
             </label>
             <textarea id="problemStatement" class="gw-textarea" placeholder="Detail the core customer struggle, economic impact, current baseline metric, and what happens if we do nothing..."></textarea>
           </div>
@@ -426,9 +426,18 @@
           </div>
           <div id="groundingSummaryBox" style="background:#f8fafd; border:1px solid #dadce0; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:10px;">
             <div style="font-weight:600; font-size:13px;" id="groundingStatusTitle">Telemetry Status: Active</div>
-            <div style="font-size:12px; color:#1e8e3e;" id="groundingSqlStatus">✓ Domain SQL Telemetry Schema Ingested</div>
-            <div style="font-size:12px; color:#1e8e3e;" id="groundingCabStatus">✓ Qualitative Customer Voice Evidence Grounded</div>
-            <div style="font-size:12px; color:#d93025;" id="groundingRegionalStatus">⚠️ Regional Telemetry Sampling Checked</div>
+            <div style="font-size:12px; color:#1e8e3e; display:flex; align-items:center; gap:6px;" id="groundingSqlStatus">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1e8e3e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Domain SQL Telemetry Schema Ingested</span>
+            </div>
+            <div style="font-size:12px; color:#1e8e3e; display:flex; align-items:center; gap:6px;" id="groundingCabStatus">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1e8e3e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Qualitative Customer Voice Evidence Grounded</span>
+            </div>
+            <div style="font-size:12px; color:#d93025; display:flex; align-items:center; gap:6px;" id="groundingRegionalStatus">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d93025" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Regional Telemetry Sampling Checked</span>
+            </div>
           </div>
         </div>
 
@@ -447,11 +456,11 @@
         <!-- Integrated Segmented Control & Actions Bar (Inspo-Inspired Atlassian/Linear pattern) -->
         <div class="gw-top-toolbar">
           <div class="gw-segmented-tabs preview-tabs">
-            <button class="gw-segment-tab preview-tab active" data-tab="prd">📄 12-Phase PRD</button>
-            <button class="gw-segment-tab preview-tab" data-tab="audit">🛡️ CPO Audit</button>
-            <button class="gw-segment-tab preview-tab" data-tab="wireframe">🎨 Prototype</button>
-            <button class="gw-segment-tab preview-tab" data-tab="telemetry">📊 Telemetry</button>
-            <button class="gw-segment-tab preview-tab" data-tab="playground">⚡ Playground</button>
+            <button class="gw-segment-tab preview-tab active" data-tab="prd"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> <span>12-Phase PRD</span></button>
+            <button class="gw-segment-tab preview-tab" data-tab="audit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg> <span>CPO Audit</span></button>
+            <button class="gw-segment-tab preview-tab" data-tab="wireframe"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> <span>Prototype</span></button>
+            <button class="gw-segment-tab preview-tab" data-tab="telemetry"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> <span>Telemetry</span></button>
+            <button class="gw-segment-tab preview-tab" data-tab="playground"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> <span>Playground</span></button>
           </div>
 
           <div class="gw-top-actions-row">
@@ -487,7 +496,7 @@
             </button>
 
             <button id="syncNotionBtn" class="gw-action-pill-btn" title="1-Click Copy Notion-Optimized Blocks">
-              <span>📑 Notion</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> <span>Notion Sync</span>
             </button>
 
             <button id="editToggleBtn" class="gw-action-pill-btn" title="Toggle Raw Markdown Mode">&lt;/&gt;</button>
@@ -537,7 +546,7 @@
           <!-- 3 Stacked Step Cards -->
           <div class="gw-steps-stack">
             <div class="gw-step-card" id="emptyActionDraft">
-              <div class="gw-step-icon-circle yellow">💡</div>
+              <div class="gw-step-icon-circle yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
               <div class="gw-step-body">
                 <div class="gw-step-head">1. Start from Your Idea</div>
                 <div class="gw-step-sub">Fill in your project details and draft a 12-Phase PRD.</div>
@@ -545,7 +554,7 @@
             </div>
 
             <div class="gw-step-card" id="emptyActionArchetype">
-              <div class="gw-step-icon-circle blue">📚</div>
+              <div class="gw-step-icon-circle blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
               <div class="gw-step-body">
                 <div class="gw-step-head">2. Answer a Few Questions</div>
                 <div class="gw-step-sub">Add context, constraints, and key requirements.</div>
@@ -553,7 +562,7 @@
             </div>
 
             <div class="gw-step-card" id="emptyActionPlayground">
-              <div class="gw-step-icon-circle purple">✨</div>
+              <div class="gw-step-icon-circle purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></div>
               <div class="gw-step-body">
                 <div class="gw-step-head">3. Generate & Refine</div>
                 <div class="gw-step-sub">Get a structured PRD and iterate with AI.</div>
@@ -598,10 +607,10 @@
           <div class="playground-container">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
               <div>
-                <div style="font-size:18px; font-weight:700;">⚡ AI Model & Framework Playground</div>
+                <div style="font-size:18px; font-weight:700;">AI Model & Framework Playground</div>
                 <div style="font-size:13px; color:var(--color-body);">Benchmark frontier models and test different PRD styles (Amazon 6-Pager, Stripe Technical, Reforge).</div>
               </div>
-              <button id="runPlaygroundBtn" class="btn btn-primary btn-sm">🚀 Run Model Test</button>
+              <button id="runPlaygroundBtn" class="btn btn-primary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg> <span>Run Model Test</span></button>
             </div>
 
             <!-- Model & Style Selectors -->
@@ -662,7 +671,7 @@
             <!-- Playground Result Container -->
             <div id="playgroundOutput" class="playground-output-box">
               <div style="color:var(--color-muted); text-align:center; padding:40px 20px;">
-                Select a model and PRD style, then click <strong>"🚀 Run Model Test"</strong> to compare outputs.
+                Select a model and PRD style, then click <strong>"Run Model Test"</strong> to compare outputs.
               </div>
             </div>
           </div>
@@ -698,13 +707,13 @@
     <div class="modal-card">
       <div class="modal-header">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:20px;">⚡</span>
+          <span class="modal-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
           <div>
             <div style="font-weight:700; font-size:16px;">AI Generation Engine Settings</div>
             <div style="font-size:12px; color:var(--color-muted);">Select your preferred backend or use the built-in precision engine</div>
           </div>
         </div>
-        <button id="closeAiModalBtn" class="btn btn-outline btn-sm" style="padding:4px 8px;">✕</button>
+        <button id="closeAiModalBtn" class="btn btn-outline btn-sm" style="padding:4px 8px; display:inline-flex; align-items:center;" title="Close modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
 
       <div class="modal-body">
@@ -721,7 +730,7 @@
         <div id="apiKeyGroup" class="form-group" style="display:none;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <label class="form-label" for="aiApiKeyInput">API Key</label>
-            <span style="font-size:11px; color:var(--color-success);">🔒 Stored only in local browser</span>
+            <span style="font-size:11px; color:var(--color-success); display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Stored only in local browser</span>
           </div>
           <input type="password" id="aiApiKeyInput" class="form-input" placeholder="Paste your API key here..." />
         </div>
@@ -754,13 +763,13 @@
     <div class="modal-card" style="max-width:680px;">
       <div class="modal-header">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:20px;">🔷</span>
+          <span class="modal-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="#0052CC"><path d="M11.53 2c0 2.4-1.97 4.35-4.4 4.35H2.8C2.36 6.35 2 6.7 2 7.14v4.33c0 .44.36.8.8.8h4.33c5.2 0 9.4-4.2 9.4-9.4V2h-5z"/><path d="M16.63 7.13c0 2.4-1.97 4.35-4.4 4.35H7.9c-.44 0-.8.36-.8.8v4.33c0 .44.36.8.8.8h4.33c5.2 0 9.4-4.2 9.4-9.4v-.88h-5z" opacity="0.8"/><path d="M21.73 12.27c0 2.4-1.97 4.35-4.4 4.35H13c-.44 0-.8.36-.8.8v4.33c0 .44.36.8.8.8h4.33c5.2 0 9.4-4.2 9.4-9.4v-.88h-5z" opacity="0.6"/></svg></span>
           <div>
             <div style="font-weight:700; font-size:16px;">1-Click Jira Sync & Export</div>
             <div style="font-size:12px; color:var(--color-muted);">Native Atlassian Jira markup with code blocks, tables, and formatted acceptance criteria</div>
           </div>
         </div>
-        <button id="closeJiraModalBtn" class="btn btn-outline btn-sm" style="padding:4px 8px;">✕</button>
+        <button id="closeJiraModalBtn" class="btn btn-outline btn-sm" style="padding:4px 8px; display:inline-flex; align-items:center;" title="Close modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
 
       <div class="modal-body">

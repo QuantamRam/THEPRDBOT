@@ -7,15 +7,15 @@ import { getAISettings, DEFAULT_AI_KEY } from './aiService.js';
 import { generateFullPRD } from './prdGenerator.js';
 
 export const PLAYGROUND_MODELS = [
-  { id: 'haiku', name: 'Claude Haiku 5.5', provider: 'claude', speed: '⚡ Ultra Fast (~500ms)', badge: 'Active Key', maxTokens: 8192 },
-  { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'gemini', speed: '⚡ Ultra Fast (< 600ms)', badge: 'Recommended', maxTokens: 8192 },
-  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'gemini', speed: '🧠 Deep Reasoning', badge: 'High Precision', maxTokens: 8192 },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'gemini', speed: '⚡ Fast & Light', badge: 'Standard', maxTokens: 8192 },
-  { id: 'gpt-4o', name: 'OpenAI GPT-4o', provider: 'openai', speed: '🚀 Flagship Omni', badge: 'OpenAI', maxTokens: 4096 },
-  { id: 'gpt-4o-mini', name: 'OpenAI GPT-4o Mini', provider: 'openai', speed: '⚡ Fast & Efficient', badge: 'OpenAI', maxTokens: 4096 },
-  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'claude', speed: '📝 Superior Writing', badge: 'Anthropic', maxTokens: 8192 },
-  { id: 'llama-3.3-70b-versatile', name: 'Meta Llama 3.3 70B', provider: 'custom', speed: '⚡ High Throughput', badge: 'Groq / Meta', maxTokens: 4096 },
-  { id: 'builtin-local-engine', name: 'Built-in Precision Engine', provider: 'builtin', speed: '⚡ 100% Instant (Offline)', badge: 'No Key Needed', maxTokens: 8192 }
+  { id: 'haiku', name: 'Claude Haiku 5.5', provider: 'claude', speed: '< 500ms latency', badge: 'Active Key', maxTokens: 8192 },
+  { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'gemini', speed: '< 600ms latency', badge: 'Recommended', maxTokens: 8192 },
+  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'gemini', speed: 'Deep Reasoning', badge: 'High Precision', maxTokens: 8192 },
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'gemini', speed: 'Fast & Lightweight', badge: 'Standard', maxTokens: 8192 },
+  { id: 'gpt-4o', name: 'OpenAI GPT-4o', provider: 'openai', speed: 'Flagship Omni', badge: 'OpenAI', maxTokens: 4096 },
+  { id: 'gpt-4o-mini', name: 'OpenAI GPT-4o Mini', provider: 'openai', speed: 'Cost-Efficient', badge: 'OpenAI', maxTokens: 4096 },
+  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'claude', speed: 'High Fidelity', badge: 'Anthropic', maxTokens: 8192 },
+  { id: 'llama-3.3-70b-versatile', name: 'Meta Llama 3.3 70B', provider: 'custom', speed: 'High Throughput', badge: 'Groq / Meta', maxTokens: 4096 },
+  { id: 'builtin-local-engine', name: 'Built-in Precision Engine', provider: 'builtin', speed: 'Offline Deterministic', badge: 'No Key Needed', maxTokens: 8192 }
 ];
 
 export const PRD_STYLES = [

@@ -2400,7 +2400,56 @@ body {
 }
 
 .gw-label-icon {
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #5f6368;
+  vertical-align: -3px;
+  margin-right: 4px;
+}
+
+[data-theme="dark"] .gw-label-icon {
+  color: #9aa0a6;
+}
+
+.gw-quick-pill svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  margin-right: 4px;
+  opacity: 0.75;
+}
+
+.gw-quick-pill:hover svg {
+  opacity: 1;
+}
+
+.modal-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #f1f3f4;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .modal-header-icon {
+  background-color: #2b2e38;
+}
+
+@keyframes spin-keyframes {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: spin-keyframes 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .gw-label-hint {

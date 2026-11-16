@@ -12,8 +12,8 @@
     "semantic_hash": ""
   },
   "src/engine/aiService.js": {
-    "mtime": 1794800879.3370876,
-    "seen": 1794801092.7746143,
+    "mtime": 1794801245.2021232,
+    "seen": 1794802114.5731828,
     "ast_hash": "519eef7e0ec53b9ad179346a2366bbeb",
     "semantic_hash": ""
   },
@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "src/engine/playgroundEngine.js": {
-    "mtime": 1794800953.4006555,
-    "seen": 1794801092.7746143,
-    "ast_hash": "7551810dff045595a9e805340b577d45",
+    "mtime": 1794801952.2359078,
+    "seen": 1794802114.5731828,
+    "ast_hash": "2e6e289e1312c4e60cca63c2e81cb880",
     "semantic_hash": ""
   },
   "src/engine/prdGenerator.js": {
@@ -54,15 +54,15 @@
     "semantic_hash": ""
   },
   "src/engine/wireframeEngine.js": {
-    "mtime": 1793848828.7172365,
-    "seen": 1794798566.1215572,
-    "ast_hash": "a406a192eec37c1da3fe7e9ab9bb87d6",
+    "mtime": 1794802005.480072,
+    "seen": 1794802114.5731828,
+    "ast_hash": "fdef5aa21244746a1928058eef705c26",
     "semantic_hash": ""
   },
   "src/main.js": {
-    "mtime": 1794801076.0982323,
-    "seen": 1794801092.7746143,
-    "ast_hash": "975d2575eec41ef904a5e3ec9c2dac0b",
+    "mtime": 1794801922.9932828,
+    "seen": 1794802114.5731828,
+    "ast_hash": "eb8b8704a38bd2c57088d0a90983658a",
     "semantic_hash": ""
   },
   "src/utils/exportUtils.js": {
@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794800997.277341,
-    "seen": 1794801092.7746143,
-    "ast_hash": "758bb0d6c0d80d3a1a8e0b5361771d10",
+    "mtime": 1794802097.254804,
+    "seen": 1794802114.5731828,
+    "ast_hash": "124d63b497bcf3a1f36fab2f548f93a0",
     "semantic_hash": ""
   },
   "public/hero_animation.mp4": {

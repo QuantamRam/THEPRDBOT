@@ -1,27 +1,51 @@
 /**
  * AI Service Engine
- * Handles live LLM API calls (Gemini, OpenAI, Groq, Custom) and seamless fallback
- * to the Built-In Precision Synthesis Engine.
+ * Handles live LLM API calls:
+ * - Claude via genzdealz.ai API (Default active engine with Claude Haiku 5.5)
+ * - Google Gemini API
+ * - OpenAI / Custom endpoint
+ * - Seamless fallback to Built-In Precision Synthesis Engine.
  */
 import { generateFullPRD } from './prdGenerator.js';
 
 const STORAGE_KEY = 'the_prd_bot_ai_settings';
 
+export const DEFAULT_AI_KEY = 'sk-gzd-live_518c73d06740.fQfZ_xi4IpivFQYIGx0706CSjpd-atms1-JCaIgt7Y8';
+export const DEFAULT_AI_PROVIDER = 'claude';
+export const DEFAULT_AI_MODEL = 'haiku';
+export const DEFAULT_AI_BASE_URL = 'https://api.genzdealz.ai';
+
 export function getAISettings() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      // If user had builtin without a custom key, automatically upgrade to active Claude provider
+      if (parsed.provider === 'builtin' && (!parsed.apiKey || parsed.apiKey === '')) {
+        return {
+          provider: 'claude',
+          apiKey: DEFAULT_AI_KEY,
+          model: 'haiku',
+          baseUrl: DEFAULT_AI_BASE_URL
+        };
+      }
+      if (parsed.provider === 'claude' && !parsed.apiKey) {
+        parsed.apiKey = DEFAULT_AI_KEY;
+      }
+      if (parsed.provider === 'claude' && !parsed.model) {
+        parsed.model = 'haiku';
+      }
+      return parsed;
     }
   } catch (e) {
     console.error('Failed to read AI settings:', e);
   }
 
   return {
-    provider: 'builtin', // 'builtin' | 'gemini' | 'openai' | 'custom'
-    apiKey: '',
-    model: 'gemini-2.0-flash',
-    baseUrl: 'https://generativelanguage.googleapis.com/v1beta'
+    provider: 'claude', // Active default: Claude Haiku 5.5 via genzdealz.ai
+    apiKey: DEFAULT_AI_KEY,
+    model: 'haiku',
+    baseUrl: DEFAULT_AI_BASE_URL
   };
 }
 
@@ -38,14 +62,55 @@ export async function testAIConnection(settings) {
     return { ok: true, message: 'Built-in Precision Engine ready (Zero setup required).' };
   }
 
-  if (!settings.apiKey) {
+  const apiKey = settings.apiKey || (settings.provider === 'claude' ? DEFAULT_AI_KEY : '');
+  if (!apiKey) {
     return { ok: false, message: 'API Key is missing.' };
   }
 
   try {
+    if (settings.provider === 'claude') {
+      const model = settings.model || 'haiku';
+      const endpoints = ['/api/genzdealz/v1/messages', `${(settings.baseUrl || DEFAULT_AI_BASE_URL).replace(/\/$/, '')}/v1/messages`];
+      let lastErr = null;
+      let data = null;
+
+      for (const endpoint of endpoints) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              model,
+              max_tokens: 10,
+              messages: [{ role: 'user', content: 'Reply with "OK"' }]
+            })
+          });
+
+          if (res.ok) {
+            data = await res.json();
+            break;
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            lastErr = new Error(errData?.error?.message || `HTTP ${res.status}`);
+          }
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+
+      if (data) {
+        return { ok: true, message: `Connected to Claude (${data.model || model}) via genzdealz.ai successfully!` };
+      }
+      throw lastErr || new Error('Failed to connect to Claude API.');
+    }
+
     if (settings.provider === 'gemini') {
       const model = settings.model || 'gemini-2.0-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${settings.apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -69,7 +134,7 @@ export async function testAIConnection(settings) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${settings.apiKey}`
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: settings.model || 'gpt-4o-mini',
@@ -94,21 +159,75 @@ export async function testAIConnection(settings) {
 
 export async function generatePRD(inputs, qaAnswers, onProgress) {
   const settings = getAISettings();
+  const apiKey = settings.apiKey || (settings.provider === 'claude' ? DEFAULT_AI_KEY : '');
 
-  // If using Built-in Engine or no API key provided, use local precision synthesizer
-  if (settings.provider === 'builtin' || !settings.apiKey) {
+  // If explicitly using Built-in Engine or no key available for non-builtin providers
+  if (settings.provider === 'builtin' || (!apiKey && settings.provider !== 'claude')) {
     return generateBuiltinWithProgress(inputs, qaAnswers, onProgress);
   }
 
-  // Live AI Generation (Gemini / OpenAI / Custom)
+  // Live AI Generation (Claude / Gemini / OpenAI / Custom)
   try {
-    if (onProgress) onProgress('THINKING', 'Connecting to AI model & framing product context...');
+    if (onProgress) onProgress('THINKING', 'Connecting to Claude AI (genzdealz.ai) & framing product context...');
     
     const masterPrompt = buildMasterPMPrompt(inputs, qaAnswers);
 
+    // 1. Claude via genzdealz.ai
+    if (settings.provider === 'claude') {
+      const model = settings.model || 'haiku';
+      if (onProgress) onProgress('GREPPING', `Querying Claude (${model}) with 12-Phase PM Framework...`);
+
+      const endpoints = ['/api/genzdealz/v1/messages', `${(settings.baseUrl || DEFAULT_AI_BASE_URL).replace(/\/$/, '')}/v1/messages`];
+      let data = null;
+      let lastErr = null;
+
+      for (const endpoint of endpoints) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              model,
+              max_tokens: 8192,
+              messages: [{ role: 'user', content: masterPrompt }]
+            })
+          });
+
+          if (res.ok) {
+            data = await res.json();
+            break;
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            lastErr = new Error(errData?.error?.message || `HTTP ${res.status}`);
+          }
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+
+      if (!data) {
+        throw lastErr || new Error('Claude generation failed.');
+      }
+
+      if (onProgress) onProgress('EDITING', 'Structuring executive 12-Phase PRD markdown...');
+      const text = data?.content?.map(c => c.text).join('') || data?.content?.[0]?.text;
+
+      if (!text || text.length < 200) {
+        throw new Error('Claude returned an empty or truncated response.');
+      }
+
+      if (onProgress) onProgress('DONE', `Drafted successfully with Claude (${data.model || model})!`);
+      return text;
+    }
+
+    // 2. Google Gemini
     if (settings.provider === 'gemini') {
       const model = settings.model || 'gemini-2.0-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${settings.apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
       if (onProgress) onProgress('GREPPING', `Querying ${model} with 12-Phase PM Framework...`);
 
@@ -141,6 +260,7 @@ export async function generatePRD(inputs, qaAnswers, onProgress) {
       return text;
     }
 
+    // 3. OpenAI or Custom Endpoint
     if (settings.provider === 'openai' || settings.provider === 'custom') {
       const baseUrl = settings.baseUrl || 'https://api.openai.com/v1';
       const url = `${baseUrl.replace(/\/$/, '')}/chat/completions`;
@@ -151,7 +271,7 @@ export async function generatePRD(inputs, qaAnswers, onProgress) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${settings.apiKey}`
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: settings.model || 'gpt-4o-mini',
@@ -187,7 +307,7 @@ export async function generatePRD(inputs, qaAnswers, onProgress) {
     }
   } catch (err) {
     console.warn('Live AI generation failed; falling back to Built-In Precision Synthesizer:', err);
-    if (onProgress) onProgress('READ', `AI Call Notice: ${err.message}. Switching to Built-In Engine...`);
+    if (onProgress) onProgress('READ', `AI Notice: ${err.message}. Switching to Built-In Engine...`);
     await new Promise(r => setTimeout(r, 800));
     return generateBuiltinWithProgress(inputs, qaAnswers, onProgress);
   }
@@ -256,4 +376,3 @@ CRITICAL INSTRUCTIONS & PRD PRINCIPLES:
 
 Output strictly clean Markdown format ready for engineering and executive handoff.`;
 }
-

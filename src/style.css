@@ -2003,8 +2003,56 @@ body {
 .gw-nav-right {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
+}
+
+.gw-engine-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1px solid #dadce0;
+  background-color: #f8fafd;
+  color: #3c4043;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.gw-engine-pill-btn:hover {
+  background-color: #f1f3f4;
+  border-color: #7c3aed;
+  color: #7c3aed;
+}
+
+[data-theme="dark"] .gw-engine-pill-btn {
+  background-color: #202124;
+  border-color: #3c4043;
+  color: #e8eaed;
+}
+
+[data-theme="dark"] .gw-engine-pill-btn:hover {
+  background-color: #303134;
+  border-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.gw-engine-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #7c3aed;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.6);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
 }
 
 .gw-user-avatar {

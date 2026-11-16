@@ -3,16 +3,17 @@
  * Multi-model test bench supporting Gemini, OpenAI, Claude, Llama, and Built-In Synthesizer
  * across multiple PRD Framework styles (Amazon 6-Pager, Stripe Technical, Reforge, Lean 1-Pager).
  */
-import { getAISettings } from './aiService.js';
+import { getAISettings, DEFAULT_AI_KEY } from './aiService.js';
 import { generateFullPRD } from './prdGenerator.js';
 
 export const PLAYGROUND_MODELS = [
+  { id: 'haiku', name: 'Claude Haiku 5.5', provider: 'claude', speed: '⚡ Ultra Fast (~500ms)', badge: 'Active Key', maxTokens: 8192 },
   { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'gemini', speed: '⚡ Ultra Fast (< 600ms)', badge: 'Recommended', maxTokens: 8192 },
   { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'gemini', speed: '🧠 Deep Reasoning', badge: 'High Precision', maxTokens: 8192 },
   { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'gemini', speed: '⚡ Fast & Light', badge: 'Standard', maxTokens: 8192 },
   { id: 'gpt-4o', name: 'OpenAI GPT-4o', provider: 'openai', speed: '🚀 Flagship Omni', badge: 'OpenAI', maxTokens: 4096 },
   { id: 'gpt-4o-mini', name: 'OpenAI GPT-4o Mini', provider: 'openai', speed: '⚡ Fast & Efficient', badge: 'OpenAI', maxTokens: 4096 },
-  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'custom', speed: '📝 Superior Writing', badge: 'Anthropic', maxTokens: 8192 },
+  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'claude', speed: '📝 Superior Writing', badge: 'Anthropic', maxTokens: 8192 },
   { id: 'llama-3.3-70b-versatile', name: 'Meta Llama 3.3 70B', provider: 'custom', speed: '⚡ High Throughput', badge: 'Groq / Meta', maxTokens: 4096 },
   { id: 'builtin-local-engine', name: 'Built-in Precision Engine', provider: 'builtin', speed: '⚡ 100% Instant (Offline)', badge: 'No Key Needed', maxTokens: 8192 }
 ];
@@ -60,9 +61,11 @@ export async function runPlaygroundGeneration({
   const bu = inputs.businessUnit || "Product Operations";
   const problem = inputs.problemStatement || "Users experience manual workflow friction and lack of telemetry.";
 
-  // If using live AI key for Gemini or OpenAI
-  if ((modelObj.provider === 'gemini' && settings.apiKey) || 
-      (modelObj.provider === 'openai' && settings.apiKey)) {
+  // If using live AI key for Claude, Gemini, or OpenAI
+  const activeKey = settings.apiKey || (modelObj.provider === 'claude' ? DEFAULT_AI_KEY : '');
+  if ((modelObj.provider === 'claude' && activeKey) ||
+      (modelObj.provider === 'gemini' && activeKey) || 
+      (modelObj.provider === 'openai' && activeKey)) {
     try {
       const promptText = customPrompt.trim() 
         ? customPrompt 
@@ -70,8 +73,47 @@ export async function runPlaygroundGeneration({
 
       let resultText = '';
 
-      if (modelObj.provider === 'gemini') {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${settings.apiKey}`;
+      if (modelObj.provider === 'claude') {
+        const endpoints = ['/api/genzdealz/v1/messages', 'https://api.genzdealz.ai/v1/messages'];
+        let data = null;
+        let lastErr = null;
+        const requestedModel = (modelId === 'claude-3-5-sonnet' || !modelId) ? 'haiku' : modelId;
+
+        for (const ep of endpoints) {
+          try {
+            const res = await fetch(ep, {
+              method: 'POST',
+              headers: {
+                'x-api-key': activeKey,
+                'anthropic-version': '2023-06-01',
+                'content-type': 'application/json'
+              },
+              body: JSON.stringify({
+                model: requestedModel,
+                max_tokens: modelObj.maxTokens || 4096,
+                messages: [{ role: 'user', content: promptText }]
+              })
+            });
+
+            if (res.ok) {
+              data = await res.json();
+              break;
+            } else {
+              const errData = await res.json().catch(() => ({}));
+              lastErr = new Error(errData?.error?.message || `HTTP ${res.status}`);
+            }
+          } catch (e) {
+            lastErr = e;
+          }
+        }
+
+        if (data) {
+          resultText = data?.content?.map(c => c.text).join('') || data?.content?.[0]?.text || '';
+        } else {
+          throw lastErr || new Error('Claude request failed');
+        }
+      } else if (modelObj.provider === 'gemini') {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${activeKey}`;
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -95,7 +137,7 @@ export async function runPlaygroundGeneration({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${settings.apiKey}`
+            'Authorization': `Bearer ${activeKey}`
           },
           body: JSON.stringify({
             model: modelId,

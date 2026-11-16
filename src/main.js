@@ -282,11 +282,13 @@ function setupEventListeners() {
   // Quick Jump Navigation Pills
   document.querySelectorAll('.jump-pill').forEach(pill => {
     pill.addEventListener('click', (e) => {
-      const targetPhase = e.target.dataset.target;
+      const targetPhase = e.currentTarget.dataset.target || e.target.dataset.target;
+      if (!targetPhase) return;
       const phaseNum = targetPhase.replace('phase-', '');
-      const headings = prdRenderedView.querySelectorAll('h3');
+      const headings = prdRenderedView.querySelectorAll('h2, h3, h4');
       for (const h of headings) {
-        if (h.innerText.includes(`PHASE ${phaseNum}:`)) {
+        const text = h.innerText.toUpperCase();
+        if (text.includes(`PHASE ${phaseNum}:`) || text.includes(`PHASE ${phaseNum} `) || text.includes(`PHASE ${phaseNum}-`) || text.includes(`PHASE ${phaseNum}`)) {
           h.scrollIntoView({ behavior: 'smooth', block: 'start' });
           break;
         }
@@ -648,24 +650,27 @@ function handleDownloadJira() {
 // AI Settings & Modal Management
 function updateAIEngineBadge() {
   const settings = getAISettings();
-  if (settings.provider === 'gemini') {
-    aiEngineIcon.innerText = '✨';
-    aiEngineLabel.innerText = `Gemini (${settings.model || 'flash'})`;
+  if (settings.provider === 'claude') {
+    if (aiEngineIcon) aiEngineIcon.innerText = '🟣';
+    if (aiEngineLabel) aiEngineLabel.innerText = `Claude (${settings.model || 'haiku'})`;
+  } else if (settings.provider === 'gemini') {
+    if (aiEngineIcon) aiEngineIcon.innerText = '✨';
+    if (aiEngineLabel) aiEngineLabel.innerText = `Gemini (${settings.model || 'flash'})`;
   } else if (settings.provider === 'openai' || settings.provider === 'custom') {
-    aiEngineIcon.innerText = '🤖';
-    aiEngineLabel.innerText = `${settings.provider === 'custom' ? 'Custom' : 'OpenAI'} (${settings.model || 'gpt'})`;
+    if (aiEngineIcon) aiEngineIcon.innerText = '🤖';
+    if (aiEngineLabel) aiEngineLabel.innerText = `${settings.provider === 'custom' ? 'Custom' : 'OpenAI'} (${settings.model || 'gpt'})`;
   } else {
-    aiEngineIcon.innerText = '⚡';
-    aiEngineLabel.innerText = 'Engine: Built-in';
+    if (aiEngineIcon) aiEngineIcon.innerText = '⚡';
+    if (aiEngineLabel) aiEngineLabel.innerText = 'Built-in Engine';
   }
 }
 
 function openAIModal() {
   const settings = getAISettings();
-  aiProviderSelect.value = settings.provider || 'builtin';
+  aiProviderSelect.value = settings.provider || 'claude';
   aiApiKeyInput.value = settings.apiKey || '';
-  aiModelInput.value = settings.model || '';
-  aiBaseUrlInput.value = settings.baseUrl || '';
+  aiModelInput.value = settings.model || 'haiku';
+  aiBaseUrlInput.value = settings.baseUrl || 'https://api.genzdealz.ai';
   testConnectionStatus.style.display = 'none';
 
   updateAIModalFields();
@@ -682,6 +687,12 @@ function updateAIModalFields() {
     apiKeyGroup.style.display = 'none';
     modelGroup.style.display = 'none';
     baseUrlGroup.style.display = 'none';
+  } else if (provider === 'claude') {
+    apiKeyGroup.style.display = 'block';
+    modelGroup.style.display = 'block';
+    baseUrlGroup.style.display = 'none';
+    if (!aiModelInput.value) aiModelInput.value = 'haiku';
+    if (!aiApiKeyInput.value) aiApiKeyInput.value = 'sk-gzd-live_518c73d06740.fQfZ_xi4IpivFQYIGx0706CSjpd-atms1-JCaIgt7Y8';
   } else if (provider === 'gemini') {
     apiKeyGroup.style.display = 'block';
     modelGroup.style.display = 'block';
@@ -891,6 +902,11 @@ async function runPRDGenerationPipeline() {
         <span class="timeline-pill ${pillClasses[pill] || 'pill-done'}">${pill}</span>
         <span style="font-size:11px; font-family:var(--font-code);">${text}</span>
       `;
+
+      if (studioGenBtn) {
+        const shortText = text.length > 28 ? text.slice(0, 28) + '...' : text;
+        studioGenBtn.innerHTML = `<span>⚡</span> ${shortText}`;
+      }
     });
 
     currentPRDMarkdown = prdText;
@@ -912,7 +928,12 @@ async function runPRDGenerationPipeline() {
     renderTelemetryView(telemetryData);
     updateGroundingTab();
     triggerConfetti();
-    showToast('12-Phase PRD drafted successfully!');
+
+    const activeSettings = getAISettings();
+    const engineLabel = activeSettings.provider === 'claude' 
+      ? 'Claude Haiku 5.5 (genzdealz.ai)' 
+      : (activeSettings.provider === 'gemini' ? 'Google Gemini' : (activeSettings.provider === 'openai' ? 'OpenAI' : 'Built-in Engine'));
+    showToast(`12-Phase PRD drafted successfully with ${engineLabel}!`);
   } catch (err) {
     console.error('PRD generation error:', err);
     timelineStatusBox.innerHTML = `

@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "src/engine/aiService.js": {
-    "mtime": 1793848811.3299243,
-    "seen": 1794798566.1215572,
-    "ast_hash": "8c20b3961f45223050ac46769b053b15",
+    "mtime": 1794800879.3370876,
+    "seen": 1794801092.7746143,
+    "ast_hash": "519eef7e0ec53b9ad179346a2366bbeb",
     "semantic_hash": ""
   },
   "src/engine/cpoAuditEngine.js": {
@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "src/engine/playgroundEngine.js": {
-    "mtime": 1793850626.742195,
-    "seen": 1794798566.1215572,
-    "ast_hash": "3bf9287d2103fd5cd9bb6083ea6420d6",
+    "mtime": 1794800953.4006555,
+    "seen": 1794801092.7746143,
+    "ast_hash": "7551810dff045595a9e805340b577d45",
     "semantic_hash": ""
   },
   "src/engine/prdGenerator.js": {
@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src/main.js": {
-    "mtime": 1794799416.9881413,
-    "seen": 1794799515.6741266,
-    "ast_hash": "a78b87406182171c67acffca3f2faf69",
+    "mtime": 1794801076.0982323,
+    "seen": 1794801092.7746143,
+    "ast_hash": "975d2575eec41ef904a5e3ec9c2dac0b",
     "semantic_hash": ""
   },
   "src/utils/exportUtils.js": {
@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794799348.3504715,
-    "seen": 1794799515.6741266,
-    "ast_hash": "3cda80b0339f0291bf9015ab0f07b291",
+    "mtime": 1794800997.277341,
+    "seen": 1794801092.7746143,
+    "ast_hash": "758bb0d6c0d80d3a1a8e0b5361771d10",
     "semantic_hash": ""
   },
   "public/hero_animation.mp4": {
@@ -135,6 +135,12 @@
     "mtime": 1794798614.3544047,
     "seen": 1794798834.5355573,
     "ast_hash": "dfe5fa7939121e96d61b54077cc9ab84",
+    "semantic_hash": ""
+  },
+  "vite.config.js": {
+    "mtime": 1794800639.7810779,
+    "seen": 1794801092.7746143,
+    "ast_hash": "6c3de7968c4c81a42b5c03e5024ef3eb",
     "semantic_hash": ""
   },
   "package-lock.json": {

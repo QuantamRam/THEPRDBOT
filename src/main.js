@@ -274,7 +274,8 @@ function setupEventListeners() {
   // Right Panel Tabs
   document.querySelectorAll('.preview-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
-      switchPreviewTab(e.target.dataset.tab);
+      const tabTarget = e.currentTarget.dataset.tab || e.target.closest('.preview-tab')?.dataset.tab;
+      if (tabTarget) switchPreviewTab(tabTarget);
     });
   });
 

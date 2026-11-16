@@ -1,7 +1,7 @@
 # Graph Report - THEPRDBOT  (2026-11-16)
 
 ## Corpus Check
-- 21 files · ~29,643 words
+- 21 files · ~29,982 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 3 file(s) not represented in the graph (top: (none) 2, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d6d83e39`
+- Built from commit: `58e7f203`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,24 +35,24 @@
 2. `runPRDGenerationPipeline()` - 14 edges
 3. `detectDomain()` - 13 edges
 4. `🚀 THE PRD BOT` - 12 edges
-5. `scripts` - 10 edges
-6. `showToast()` - 10 edges
-7. `triggerConfetti()` - 10 edges
+5. `showToast()` - 10 edges
+6. `triggerConfetti()` - 10 edges
+7. `scripts` - 10 edges
 8. `generateFullPRD()` - 9 edges
 9. `Website Self-Review and Improve (max 5 passes)` - 9 edges
-10. `getAISettings()` - 7 edges
+10. `handleSaveAISettings()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `openAIModal()` --calls--> `getAISettings()`  [EXTRACTED]
   src/main.js → src/engine/aiService.js
+- `handleSaveAISettings()` --calls--> `triggerConfetti()`  [EXTRACTED]
+  src/main.js → src/utils/exportUtils.js
+- `updateGroundingTab()` --calls--> `detectDomain()`  [EXTRACTED]
+  src/main.js → src/engine/domainDetector.js
+- `refreshQAQuestions()` --calls--> `generateClarifyingQuestions()`  [EXTRACTED]
+  src/main.js → src/engine/qaGenerator.js
 - `runPRDGenerationPipeline()` --calls--> `generatePRD()`  [EXTRACTED]
   src/main.js → src/engine/aiService.js
-- `generateBuiltinWithProgress()` --calls--> `generateFullPRD()`  [EXTRACTED]
-  src/engine/aiService.js → src/engine/prdGenerator.js
-- `renderCPOAuditDashboard()` --calls--> `runCPOAudit()`  [EXTRACTED]
-  src/main.js → src/engine/cpoAuditEngine.js
-- `runPRDGenerationPipeline()` --calls--> `runCPOAudit()`  [EXTRACTED]
-  src/main.js → src/engine/cpoAuditEngine.js
 
 ## Import Cycles
 - None detected.
